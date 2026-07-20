@@ -1,0 +1,6 @@
+{
+  "name": "Safretak",
+  "description": "A full travel booking platform for the Jordanian market connecting travelers with licensed travel offices. Supports bookings, payments, and agency/admin dashboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
