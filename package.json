@@ -1,9 +1,30 @@
 {
   "name": "safretak",
   "private": true,
-  "version": "2.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "npm --prefix deploy-patch run build"
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "npm run prepare:media && vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:render": "node tests/render-smoke.mjs",
+    "check": "npm run lint && npm test && npm run test:render && npm run build",
+    "prepare:media": "node scripts/prepare-media.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "0.546.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.2.0",
+    "typescript": "5.8.3",
+    "vite": "6.4.3"
   }
 }

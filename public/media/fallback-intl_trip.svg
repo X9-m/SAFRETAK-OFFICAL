@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="t d">
+<title id="t">رحلات دولية</title><desc id="d">برامج سفر خارج الأردن</desc>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173d31"/><stop offset="1" stop-color="#071c15"/></linearGradient><radialGradient id="r" cx=".15" cy=".15" r=".9"><stop stop-color="#c9a227" stop-opacity=".28"/><stop offset="1" stop-color="#c9a227" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="720" fill="url(#g)"/><rect width="1200" height="720" fill="url(#r)"/>
+<g fill="none" stroke="#c9a227" stroke-opacity=".13"><path d="M0 80h1200M0 240h1200M0 400h1200M0 560h1200"/><path d="M120 0v720M360 0v720M600 0v720M840 0v720M1080 0v720"/></g>
+<circle cx="600" cy="285" r="112" fill="#c9a227" fill-opacity=".12" stroke="#e8cd7a" stroke-opacity=".65" stroke-width="4"/>
+<text x="600" y="325" text-anchor="middle" fill="#e8cd7a" font-family="Arial,Tahoma,sans-serif" font-size="118">✈</text>
+<text x="600" y="475" text-anchor="middle" fill="#fff" font-family="Tahoma,Arial,sans-serif" font-size="58" font-weight="700">رحلات دولية</text>
+<text x="600" y="535" text-anchor="middle" fill="#fff" fill-opacity=".62" font-family="Tahoma,Arial,sans-serif" font-size="28">برامج سفر خارج الأردن</text>
+</svg>

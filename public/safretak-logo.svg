@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">شعار سفرتك</title>
+  <desc id="desc">نخلة وطائرة باللون الذهبي داخل إطار دائري أخضر</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop stop-color="#173d31"/><stop offset="1" stop-color="#071c15"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f2d26b"/><stop offset=".48" stop-color="#c9a227"/><stop offset="1" stop-color="#8d6910"/></linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="244" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="220" fill="none" stroke="url(#gold)" stroke-width="10"/>
+  <circle cx="256" cy="256" r="202" fill="none" stroke="#c9a227" stroke-opacity=".28" stroke-width="2"/>
+  <g fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 175c-9 45-13 89-10 135" stroke-width="18"/>
+    <path d="M251 183c-45-36-82-23-104 8 42-9 72 2 98 27" stroke-width="13"/>
+    <path d="M258 181c44-40 86-29 108 2-43-6-74 7-101 34" stroke-width="13"/>
+    <path d="M248 194c-30-47-65-51-93-31 38 8 64 25 85 58" stroke-width="11"/>
+    <path d="M265 194c29-48 67-54 96-35-39 9-66 28-88 61" stroke-width="11"/>
+    <path d="M221 319c25-12 50-12 73 0" stroke-width="10"/>
+    <path d="M190 329c43-17 87-17 131 0" stroke-width="7" opacity=".72"/>
+  </g>
+  <path d="M147 143l83 23 89-43-65 58 42 35-67-23-42 27 19-39z" fill="url(#gold)" opacity=".92"/>
+  <text x="256" y="392" text-anchor="middle" fill="#e8cd7a" font-family="Tahoma,Arial,sans-serif" font-size="62" font-weight="800">سفرتك</text>
+  <text x="256" y="427" text-anchor="middle" fill="#fff" fill-opacity=".58" font-family="Arial,sans-serif" font-size="17" letter-spacing="3">SAFRETAK</text>
+</svg>

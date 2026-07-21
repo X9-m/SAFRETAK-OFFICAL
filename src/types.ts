@@ -1,4 +1,6 @@
-export type ServiceType =
+export type AppRole = 'traveler' | 'office' | 'admin';
+export type AuthIntent = 'login' | 'signup';
+export type ServiceKind =
   | 'trip'
   | 'intl_trip'
   | 'hotel'
@@ -10,182 +12,191 @@ export type ServiceType =
   | 'visa'
   | 'consultation';
 
-export interface Traveler {
+export type BookingStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
+export type PaymentStatus = 'unpaid' | 'paid';
+export type PaymentMethod = 'CliQ' | 'eFAWATEERcom' | 'Cash at Office';
+export type TravelerDocumentType = 'national_id' | 'passport';
+
+export interface AppProfile {
   id: string;
-  phone: string;
   fullName: string;
-  email?: string;
-  avatarUrl?: string;
+  phone: string;
+  email: string | null;
+  role: AppRole;
+  isActive: boolean;
+  language: 'ar' | 'en';
+  createdAt: string | null;
 }
 
 export interface TravelOffice {
   id: string;
   name: string;
-  logo: string;
+  logoUrl: string | null;
+  coverUrl: string | null;
   rating: number;
-  location: string;
-  isApproved: boolean;
-  subscriptionPlan: 'Free' | 'Basic' | 'Premium';
-  balance: number;
-  complaintsCount: number;
+  description: string | null;
+  location: string | null;
+  serviceCount?: number;
 }
 
-export interface BaseService {
+export interface ServiceCategory {
+  id: string;
+  nameAr: string;
+  nameEn: string;
+  slug: string;
+  icon: string | null;
+  sortOrder: number;
+}
+
+export interface CatalogAddOn {
+  id: string;
+  label: string;
+  price: number;
+}
+
+export interface CatalogOption {
+  id: string;
+  label: string;
+  priceDelta: number;
+}
+
+export interface CatalogService {
   id: string;
   officeId: string;
-  officeName: string;
+  categoryId: string | null;
+  type: ServiceKind;
   title: string;
+  description: string;
   price: number;
   rating: number;
-  image: string;
-  images?: string[];
-  description: string;
-  location?: string;
-  terms?: string;
-  cancellationPolicy?: string;
-  availableDates?: string[];
-}
-
-export interface TripService extends BaseService {
-  type: 'domestic' | 'international';
-  duration: string; // e.g., "3 Days / 2 Nights"
-  seatsRemaining: number;
-  itinerary: { day: number; title: string; activities: string[] }[];
+  imageUrl: string | null;
+  images: string[];
+  location: string | null;
+  terms: string | null;
+  cancellationPolicy: string | null;
+  availableDates: string[];
+  duration: string | null;
+  seatsRemaining: number | null;
+  itinerary: Array<Record<string, unknown> | string>;
   included: string[];
+  details: Record<string, unknown>;
+  addOns: CatalogAddOn[];
+  options: CatalogOption[];
+  office: TravelOffice;
+  category: ServiceCategory | null;
 }
 
-export interface HotelService extends BaseService {
-  city: string;
-  stars: number;
-  amenities: string[];
-  rooms: { type: string; price: number; available: number; amenities: string[] }[];
-}
-
-export interface CarService extends BaseService {
-  city: string;
-  carType: 'SUV' | 'Sedan' | 'Luxury' | 'Economy';
-  company: string;
-  capacity: number;
-  transmission: 'Automatic' | 'Manual';
-}
-
-export interface FlightService extends BaseService {
-  from: string;
-  to: string;
-  airline: string;
-  cabinClass: 'Economy' | 'Business' | 'First';
-  tripType: 'one-way' | 'round-trip' | 'multi-city';
-  departureDate: string;
-  returnDate?: string;
-  duration: string;
-}
-
-export interface BusTrainService extends BaseService {
-  type: 'bus' | 'train';
-  from: string;
-  to: string;
-  departureTime: string;
-  duration: string;
-  company: string;
-  availableSeats: number;
-}
-
-export interface HajjUmrahService extends BaseService {
-  programType: 'Hajj' | 'Umrah';
-  duration: string;
-  hotelAmman?: string;
-  hotelMakkah: string;
-  hotelMadinah: string;
-  seatsRemaining: number;
-  supervisorName: string;
-  includedFlights: string;
-}
-
-export interface InsuranceService extends BaseService {
-  planType: 'Individual' | 'Family' | 'Worldwide';
-  durationDays: number;
-  coverageLimit: string;
-  benefits: string[];
-}
-
-export interface VisaService extends BaseService {
-  country: string;
-  requirements: string[];
-  documentsRequired: string[];
-  processingTime: string;
-  fee: number;
-}
-
-export interface ConsultationService extends BaseService {
-  languages: string[];
-  experienceYears: number;
-}
-
-export interface Booking {
+export interface PlatformAd {
   id: string;
-  serviceType: ServiceType;
-  serviceId: string;
-  serviceName: string;
-  officeId: string;
-  officeName: string;
-  travelerId: string;
-  travelerName: string;
-  travelerPhone: string;
-  bookingDetails: Record<string, any>;
-  totalPrice: number;
-  paymentMethod: 'CliQ' | 'eFAWATEERcom' | 'Visa' | 'MasterCard' | 'Cash at Office';
-  paymentStatus: 'unpaid' | 'paid';
-  status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
-  qrCode: string;
-  invoiceUrl?: string;
-  createdAt: string;
-  chatHistory: { sender: 'traveler' | 'office'; message: string; timestamp: string }[];
-  documents?: { name: string; url: string }[];
+  titleAr: string;
+  titleEn: string;
+  imageUrl: string;
+  link: string | null;
 }
 
-export interface Review {
+
+export interface BookingTraveler {
+  fullName: string;
+  nationality: string;
+  documentType: TravelerDocumentType;
+  documentNumber: string;
+  documentExpiry: string | null;
+}
+
+export interface TravelerBooking {
+  id: string;
+  referenceCode: string;
+  serviceId: string | null;
+  officeId: string;
+  serviceType: ServiceKind;
+  serviceName: string;
+  officeName: string;
+  bookingDetails: Record<string, unknown>;
+  totalPrice: number;
+  paymentMethod: string;
+  paymentStatus: PaymentStatus;
+  status: BookingStatus;
+  qrCode: string | null;
+  invoiceUrl: string | null;
+  documents: Array<Record<string, unknown>>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TravelerNotification {
+  id: string;
+  bookingId: string | null;
+  type: string;
+  titleAr: string;
+  descriptionAr: string;
+  isRead: boolean;
+  requiresAction: boolean;
+  createdAt: string;
+}
+
+export interface FavoriteService {
+  serviceId: string;
+  createdAt: string;
+}
+
+export interface NotificationPreferences {
+  bookingUpdates: boolean;
+  promotions: boolean;
+  serviceAlerts: boolean;
+}
+
+export interface TravelerStats {
+  totalBookings: number;
+  confirmedBookings: number;
+  completedBookings: number;
+  cancelledBookings: number;
+  totalSpent: number;
+}
+
+export interface PortalSnapshot {
+  profile: AppProfile;
+  bookings: TravelerBooking[];
+  notifications: TravelerNotification[];
+  favorites: FavoriteService[];
+  notificationPreferences: NotificationPreferences;
+  stats: TravelerStats;
+}
+
+export interface BookingDraft {
+  serviceId: string;
+  details: Record<string, unknown>;
+  paymentMethod: PaymentMethod;
+  paymentReference: string;
+  couponCode: string;
+}
+
+export interface ServiceReview {
   id: string;
   serviceId: string;
   travelerName: string;
   rating: number;
   comment: string;
-  date: string;
-}
-
-export interface Complaint {
-  id: string;
-  travelerName: string;
-  travelerPhone: string;
-  officeName: string;
-  subject: string;
-  details: string;
-  status: 'Open' | 'Resolved';
   createdAt: string;
-  resolution?: string;
+  isMine: boolean;
 }
 
-export interface PlatformAd {
+
+export interface BookingDocument {
   id: string;
-  titleEn: string;
-  titleAr: string;
-  image: string;
-  link: string;
-  isActive: boolean;
+  bookingId: string;
+  originalName: string;
+  documentType: string;
+  mimeType: 'image/jpeg' | 'image/png' | 'image/webp' | 'application/pdf';
+  fileSize: number;
+  status: 'pending_review' | 'approved' | 'rejected';
+  createdAt: string;
+  signedUrl: string | null;
 }
 
-export interface PlatformStats {
-  totalRevenue: number;
-  totalBookings: number;
-  activeTravelers: number;
-  activeOffices: number;
-  commissionEarned: number;
-}
-
-export interface Coupon {
-  code: string;
-  discountPercentage: number;
-  maxDiscount: number;
-  isActive: boolean;
-  minBookingValue: number;
-  expiryDate: string;
+export interface BookingMessage {
+  id: string;
+  bookingId: string;
+  sender: 'traveler' | 'office' | 'system';
+  body: string;
+  createdAt: string;
 }
