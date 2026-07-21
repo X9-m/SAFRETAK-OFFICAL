@@ -1,0 +1,31 @@
+name: Production Patch Check
+
+on:
+  push:
+    branches:
+      - production-patch
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: deploy-patch
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run build
+      - name: Verify artifact
+        run: |
+          test -f dist/index.html
+          test -f dist/patch.css
+          test -f dist/patch.js
+          grep -q '/patch.css' dist/index.html
+          grep -q '/patch.js' dist/index.html
+          test "$(find dist/assets -type f | wc -l)" -gt 5
