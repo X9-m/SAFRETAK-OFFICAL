@@ -1,0 +1,23 @@
+/* SAFRETAK homepage: offices first, larger cards, reversed card-by-card motion */
+.hero-panel{display:none!important}
+.trending-offices-section.safretak-offices-first{position:relative;overflow:hidden;padding:clamp(22px,3.5vw,38px);border:1px solid rgba(201,162,39,.24);border-radius:30px;background:radial-gradient(circle at 88% 12%,rgba(201,162,39,.15),transparent 34%),linear-gradient(135deg,#173d31,#08241b 72%);box-shadow:0 24px 62px rgba(0,0,0,.28)}
+.trending-offices-section.safretak-offices-first .trending-heading{position:relative;z-index:2;margin-bottom:20px}
+.trending-offices-section.safretak-offices-first .trending-heading h2{margin-top:5px;font-size:clamp(1.65rem,3vw,2.35rem)}
+.trending-offices-section.safretak-offices-first .office-marquee{overflow:hidden;margin:0;padding:4px 2px 8px;border-radius:24px;-webkit-mask-image:none;mask-image:none}
+.trending-offices-section.safretak-offices-first .office-marquee-track{--office-card-width:min(590px,calc(100vw - 390px));--office-gap:20px;display:flex;width:max-content;gap:var(--office-gap);direction:rtl;animation:none!important;transform:translateX(calc(var(--safretak-slide,0) * (var(--office-card-width) + var(--office-gap))));transition:transform .7s cubic-bezier(.22,.8,.22,1);will-change:transform}
+.trending-offices-section.safretak-offices-first .office-marquee-group{display:flex;gap:var(--office-gap);padding:0;direction:rtl}
+.trending-offices-section.safretak-offices-first .office-marquee-group[aria-hidden=true]{display:none!important}
+.trending-offices-section.safretak-offices-first .trending-office-card{width:var(--office-card-width);min-height:164px;flex:0 0 var(--office-card-width);grid-template-columns:86px minmax(0,1fr) auto;gap:19px;padding:23px;border-radius:24px;background:linear-gradient(145deg,rgba(29,76,60,.98),rgba(8,34,25,.98));box-shadow:0 20px 48px rgba(0,0,0,.25);opacity:.7;transform:scale(.97);transition:opacity .25s ease,transform .25s ease,border-color .25s ease}
+.trending-offices-section.safretak-offices-first .trending-office-card.safretak-active,.trending-offices-section.safretak-offices-first .trending-office-card:hover{opacity:1;transform:scale(1);border-color:rgba(201,162,39,.58)}
+.trending-offices-section.safretak-offices-first .trending-office-logo{width:86px;height:86px;border-radius:23px}
+.trending-offices-section.safretak-offices-first .trending-office-copy{gap:8px}
+.trending-offices-section.safretak-offices-first .trending-office-copy strong{font-size:clamp(1.05rem,2vw,1.35rem)}
+.trending-offices-section.safretak-offices-first .trending-office-copy small{font-size:.64rem}
+.trending-offices-section.safretak-offices-first .trending-office-copy em{font-size:.68rem}
+.trending-offices-section.safretak-offices-first .trending-office-card>svg{width:22px;height:22px;color:#e8cd7a}
+.safretak-office-dots{display:flex;justify-content:center;gap:7px;margin-top:17px;direction:ltr}
+.safretak-office-dots button{width:8px;height:8px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.2);cursor:pointer;transition:width .2s ease,background .2s ease}
+.safretak-office-dots button.active{width:30px;background:#c9a227}
+@media(max-width:1100px){.trending-offices-section.safretak-offices-first .office-marquee-track{--office-card-width:min(560px,calc(100vw - 100px))}}
+@media(max-width:700px){.trending-offices-section.safretak-offices-first{padding:21px 14px;border-radius:23px}.trending-offices-section.safretak-offices-first .office-marquee-track{--office-card-width:calc(100vw - 66px);--office-gap:13px}.trending-offices-section.safretak-offices-first .trending-office-card{min-height:142px;grid-template-columns:65px minmax(0,1fr) 18px;gap:13px;padding:16px}.trending-offices-section.safretak-offices-first .trending-office-logo{width:65px;height:65px;border-radius:18px}.trending-offices-section.safretak-offices-first .trending-office-copy strong{font-size:.94rem}}
+@media(prefers-reduced-motion:reduce){.trending-offices-section.safretak-offices-first .office-marquee-track{transition:none!important}}
