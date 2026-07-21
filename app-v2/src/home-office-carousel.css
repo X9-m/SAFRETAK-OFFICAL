@@ -1,0 +1,83 @@
+/* Featured verified offices: large, discrete card-by-card carousel at the top of home */
+.trending-offices-section,
+.regional-services-section { min-width: 0; }
+.trending-offices-top {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(20px,3vw,34px);
+  border: 1px solid rgba(201,162,39,.2);
+  border-radius: 28px;
+  background: radial-gradient(circle at 12% 12%,rgba(201,162,39,.14),transparent 34%),linear-gradient(135deg,#173d31,#0b271f 70%);
+  box-shadow: 0 22px 55px rgba(0,0,0,.22);
+}
+.trending-offices-top::after {
+  content: "";
+  position: absolute;
+  left: -70px;
+  bottom: -120px;
+  width: 320px;
+  height: 320px;
+  border: 1px solid rgba(201,162,39,.07);
+  border-radius: 50%;
+  box-shadow: 0 0 0 42px rgba(201,162,39,.025),0 0 0 84px rgba(201,162,39,.017);
+  pointer-events: none;
+}
+.trending-heading { position: relative; z-index: 2; margin-bottom: 18px; }
+.trending-heading h2 { margin-top: 4px; font-size: clamp(1.55rem,3vw,2.2rem); }
+.trending-heading small { display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.48);font-size:.66rem; }
+.trending-heading small svg { color:#54b77c; }
+.office-card-carousel { position:relative;z-index:2;overflow:hidden;padding:3px 2px 6px; }
+.office-card-carousel-track {
+  --office-card-width: min(560px, calc(100vw - 110px));
+  --office-gap: 18px;
+  display:flex;
+  width:max-content;
+  flex-direction:row;
+  gap:var(--office-gap);
+  direction:rtl;
+  transform:translateX(calc(var(--office-slide) * (var(--office-card-width) + var(--office-gap))));
+  transition:transform 650ms cubic-bezier(.22,.8,.22,1);
+  will-change:transform;
+}
+.office-card-carousel-track.single-office { transform:none; }
+.trending-office-card {
+  display:grid;
+  width:var(--office-card-width);
+  min-height:156px;
+  flex:0 0 var(--office-card-width);
+  grid-template-columns:82px minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+  padding:22px;
+  border:1px solid rgba(201,162,39,.18);
+  border-radius:23px;
+  background:linear-gradient(145deg,rgba(24,66,52,.96),rgba(9,34,26,.96));
+  color:#fff;
+  text-align:right;
+  box-shadow:0 18px 42px rgba(0,0,0,.2);
+  cursor:pointer;
+  opacity:.72;
+  transform:scale(.965);
+  transition:transform 220ms ease,border-color 220ms ease,opacity 220ms ease,background 220ms ease;
+}
+.trending-office-card.active,.trending-office-card:hover { opacity:1;transform:scale(1);border-color:rgba(201,162,39,.5);background:linear-gradient(145deg,rgba(29,78,61,.98),rgba(10,41,31,.98)); }
+.trending-office-logo { display:grid;width:82px;height:82px;place-items:center;overflow:hidden;border:1px solid rgba(201,162,39,.28);border-radius:22px;background:rgba(201,162,39,.1);color:var(--gold); }
+.trending-office-logo img { width:100%;height:100%;object-fit:cover; }
+.trending-office-copy { min-width:0;display:grid;gap:7px; }
+.trending-office-copy small,.trending-office-copy em { display:flex;align-items:center;gap:6px;font-style:normal; }
+.trending-office-copy small { color:#78d49b;font-size:.63rem; }
+.trending-office-copy strong { overflow:hidden;font-size:clamp(1rem,2vw,1.28rem);text-overflow:ellipsis;white-space:nowrap; }
+.trending-office-copy em { color:rgba(255,255,255,.5);font-size:.66rem; }
+.trending-office-copy em svg { color:var(--gold-soft); }
+.office-card-open { display:inline-flex;min-height:42px;align-items:center;gap:7px;padding:0 14px;border:1px solid rgba(201,162,39,.2);border-radius:12px;background:rgba(201,162,39,.09);color:#e8cd7a;font-size:.65rem;font-weight:800;white-space:nowrap; }
+.office-carousel-dots { display:flex;justify-content:center;gap:7px;margin-top:16px;direction:ltr; }
+.office-carousel-dots button { width:8px;height:8px;padding:0;border:0;border-radius:99px;background:rgba(255,255,255,.18);cursor:pointer;transition:width 180ms ease,background 180ms ease; }
+.office-carousel-dots button.active { width:28px;background:#c9a227; }
+@media(max-width:700px){
+  .trending-offices-top{padding:20px 14px;border-radius:23px}
+  .trending-heading{align-items:flex-start;flex-direction:column}
+  .office-card-carousel-track{--office-card-width:calc(100vw - 64px);--office-gap:12px}
+  .trending-office-card{min-height:132px;grid-template-columns:62px minmax(0,1fr);gap:13px;padding:16px}
+  .trending-office-logo{width:62px;height:62px;border-radius:18px}
+  .office-card-open{grid-column:1/-1;justify-content:center;width:100%}
+}
