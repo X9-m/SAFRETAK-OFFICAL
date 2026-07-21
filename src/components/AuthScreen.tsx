@@ -146,7 +146,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
       <div className="lattice" aria-hidden="true" />
       <section className="auth-card screen-enter auth-choice-card" key={`${intent}-${step}`}>
         <header className="brand">
-          <div className="logo-circle"><img src="/safretak-logo.svg" alt="شعار سفرتك" className="app-logo" /></div>
+          <div className="logo-circle"><img src="/safretak-logo.jpeg" alt="شعار سفرتك" className="app-logo" /></div>
           <h1>سفرتك</h1>
           <p>منصة السفر والسياحة الأردنية</p>
         </header>

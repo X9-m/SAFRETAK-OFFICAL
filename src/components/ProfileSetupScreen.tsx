@@ -38,7 +38,7 @@ export function ProfileSetupScreen({ profile, onComplete, onLogout }: ProfileSet
       <div className="lattice" aria-hidden="true" />
       <section className="auth-card screen-enter profile-setup-card">
         <header className="brand">
-          <div className="logo-circle"><img src="/safretak-logo.svg" alt="شعار سفرتك" className="app-logo" /></div>
+          <div className="logo-circle"><img src="/safretak-logo.jpeg" alt="شعار سفرتك" className="app-logo" /></div>
           <h1>سفرتك</h1>
           <p>منصة السفر والسياحة الأردنية</p>
         </header>

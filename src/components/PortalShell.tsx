@@ -28,7 +28,7 @@ export function PortalShell({ profile, activeTab, unreadCount, children, onTabCh
       <div className="lattice" aria-hidden="true" />
       <header className="portal-header">
         <div className="portal-brand">
-          <div className="portal-logo-frame"><img src="/safretak-logo.svg" alt="شعار سفرتك" /><span>JO</span></div>
+          <div className="portal-logo-frame"><img src="/safretak-logo.jpeg" alt="شعار سفرتك" /><span>JO</span></div>
           <div><strong>سفرتك</strong><small>منصة السفر والسياحة الأردنية</small></div>
         </div>
         <div className="portal-user-cluster">
