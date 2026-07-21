@@ -1,0 +1,39 @@
+name: Restore original SAFRETAK logo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore-logo:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore the original JPEG from project history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show 231681a23535572882fc163256e0df66098537f9:public/safretak-logo.jpeg > public/safretak-logo.jpeg
+          grep -RIl '/safretak-logo.svg' src | xargs -r sed -i 's#/safretak-logo\.svg#/safretak-logo.jpeg#g'
+          rm -f public/safretak-logo.svg
+
+      - name: Commit exact original logo
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'SAFRETAK Release Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add public/safretak-logo.jpeg public/safretak-logo.svg src
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'fix: restore exact original SAFRETAK JPEG logo'
+          git push origin HEAD:main
