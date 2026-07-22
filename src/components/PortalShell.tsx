@@ -1,4 +1,4 @@
-import { Bell, CalendarCheck2, Compass, Home, LogOut, Map, ShieldCheck, UserRound } from 'lucide-react';
+import { Bell, CalendarCheck2, Compass, Home, Map, ShieldCheck, UserRound } from 'lucide-react';
 import type { AppProfile } from '../types';
 import { APP_VERSION } from '../version';
 
@@ -21,7 +21,7 @@ const tabs = [
   { id: 'account' as const, label: 'حسابي', icon: UserRound },
 ];
 
-export function PortalShell({ profile, activeTab, unreadCount, children, onTabChange, onNotifications, onLogout }: PortalShellProps) {
+export function PortalShell({ profile, activeTab, unreadCount, children, onTabChange, onNotifications }: PortalShellProps) {
   const initials = profile.fullName.trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join('') || 'س';
   return (
     <div className="portal-page" dir="rtl">
@@ -39,7 +39,6 @@ export function PortalShell({ profile, activeTab, unreadCount, children, onTabCh
           <button type="button" className="icon-button notification-button" onClick={onNotifications} aria-label={unreadCount ? `الإشعارات، ${unreadCount} غير مقروء` : 'الإشعارات'}>
             <Bell size={19} />{unreadCount > 0 ? <span aria-hidden="true">{unreadCount > 9 ? '9+' : unreadCount}</span> : null}
           </button>
-          <button type="button" className="icon-button desktop-logout" onClick={onLogout} aria-label="تسجيل الخروج"><LogOut size={18} /></button>
         </div>
       </header>
 
@@ -51,7 +50,6 @@ export function PortalShell({ profile, activeTab, unreadCount, children, onTabCh
           </nav>
           <div className="sidebar-assurance"><ShieldCheck size={18} /><div><strong>حجوزات موثقة</strong><small>كل طلب مرتبط بحسابك ومكتب السياحة.</small></div></div>
           <div className="sidebar-currency"><Map size={17} /><div><strong>الأردن</strong><small>العملة الأساسية: الدينار الأردني</small></div></div><small className="sidebar-version">SAFRETAK v{APP_VERSION}</small>
-          <button type="button" className="sidebar-logout" onClick={onLogout}><LogOut size={17} />تسجيل الخروج</button>
         </aside>
 
         <main id="portal-content" className="portal-content" tabIndex={-1}>{children}</main>
