@@ -100,8 +100,7 @@ export function HomePage({ services, offices, ads, favoriteIds, onSelectService,
     <div className="page-stack page-enter">
       <section className="trending-offices-section trending-offices-top" aria-labelledby="trending-offices-title">
         <div className="section-heading trending-heading">
-          <div><span>الرائجة الآن</span><h2 id="trending-offices-title">المكاتب الرائجة</h2></div>
-          <small><CheckCircle2 size={13} />للمكاتب الموثقة فقط</small>
+          <div><span id="trending-offices-title" style={{ fontSize: 'clamp(1.55rem, 3vw, 2.2rem)' }}>المكاتب الرائجة</span></div>
         </div>
         {trendingOffices.length ? (
           <div className="office-card-carousel" role="region" aria-label="المكاتب السياحية الرائجة">
