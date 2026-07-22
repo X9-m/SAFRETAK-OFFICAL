@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { ArrowLeft, Clock3, Heart, Star } from 'lucide-react';
 import { formatMoney, serviceKinds } from '../domain';
 import { AppImage } from './AppImage';
@@ -14,9 +15,28 @@ interface ServiceCardProps {
 export function ServiceCard({ service, favorite = false, onSelect, onFavorite }: ServiceCardProps) {
   const meta = serviceKinds[service.type];
   const Icon = meta.icon;
+  const favoriteButtonStyle: CSSProperties = {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    zIndex: 2,
+    display: 'inline-flex',
+    width: 38,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    border: `1px solid ${favorite ? '#d5ad24' : 'rgba(213, 173, 36, 0.48)'}`,
+    borderRadius: '50%',
+    background: favorite ? '#d5ad24' : 'rgba(10, 33, 26, 0.9)',
+    color: favorite ? '#0a211a' : '#e7c13d',
+    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
+    backdropFilter: 'blur(8px)',
+    cursor: 'pointer',
+  };
 
   return (
-    <article className="service-card">
+    <article className="service-card" style={{ position: 'relative' }}>
       <button type="button" className="service-card-hit" onClick={() => onSelect(service)} aria-label={`فتح تفاصيل ${service.title}`}>
         <div className="service-media">
           <AppImage src={service.imageUrl} fallbackSrc={serviceImageFallback(service.type)} alt={service.title} />
@@ -33,8 +53,8 @@ export function ServiceCard({ service, favorite = false, onSelect, onFavorite }:
         </div>
       </button>
       {onFavorite ? (
-        <button type="button" className={`favorite-button ${favorite ? 'active' : ''}`} onClick={() => onFavorite(service, !favorite)} aria-label={favorite ? `إزالة ${service.title} من المفضلة` : `إضافة ${service.title} إلى المفضلة`}>
-          <Heart size={17} fill={favorite ? 'currentColor' : 'none'} />
+        <button type="button" className={`favorite-button ${favorite ? 'active' : ''}`} style={favoriteButtonStyle} aria-pressed={favorite} onClick={() => onFavorite(service, !favorite)} aria-label={favorite ? `إزالة ${service.title} من المفضلة` : `إضافة ${service.title} إلى المفضلة`}>
+          <Heart size={18} fill={favorite ? 'currentColor' : 'none'} />
         </button>
       ) : null}
     </article>
