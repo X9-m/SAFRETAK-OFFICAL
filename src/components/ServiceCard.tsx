@@ -53,7 +53,7 @@ export function ServiceCard({ service, favorite = false, onSelect, onFavorite }:
         </div>
       </button>
       {onFavorite ? (
-        <button type="button" className={`favorite-button ${favorite ? 'active' : ''}`} style={favoriteButtonStyle} aria-pressed={favorite} onClick={() => onFavorite(service, !favorite)} aria-label={favorite ? `إزالة ${service.title} من المفضلة` : `إضافة ${service.title} إلى المفضلة`}>
+        <button type="button" className="service-favorite-button" style={favoriteButtonStyle} aria-pressed={favorite} onClick={() => onFavorite(service, !favorite)} aria-label={favorite ? `إزالة ${service.title} من المفضلة` : `إضافة ${service.title} إلى المفضلة`}>
           <Heart size={18} fill={favorite ? 'currentColor' : 'none'} />
         </button>
       ) : null}
