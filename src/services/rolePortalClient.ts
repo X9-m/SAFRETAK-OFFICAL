@@ -2,7 +2,14 @@ import { supabaseRest } from '../supabaseClient';
 import { cleanSingleLineText, isSessionToken, isValidJordanPhone, normalizeJordanPhone } from '../validation';
 import type { AppProfile, AppRole, AuthIntent } from '../types';
 
-const SESSION_KEY = 'safretak_phone_session';
+type PortalRole = 'office' | 'admin';
+
+const SESSION_KEYS: Record<PortalRole, string> = {
+  office: 'safretak_office_session',
+  admin: 'safretak_admin_session',
+};
+
+const roleFromPath = (): PortalRole => window.location.pathname.startsWith('/admin') ? 'admin' : 'office';
 
 export interface RoleOtpChallenge {
   challengeId: string;
@@ -54,26 +61,28 @@ const friendlyError = (message?: string): string => {
 
 const throwRpc = (message?: string): never => { throw new Error(friendlyError(message)); };
 
-export const readRoleToken = (): string | null => {
+export const readRoleToken = (role: PortalRole = roleFromPath()): string | null => {
   try {
-    const token = sessionStorage.getItem(SESSION_KEY);
+    const token = sessionStorage.getItem(SESSION_KEYS[role]);
     if (!token || !isSessionToken(token)) return null;
     return token;
   } catch { return null; }
 };
 
-const requireToken = (): string => {
-  const token = readRoleToken();
+const requireToken = (role: PortalRole = roleFromPath()): string => {
+  const token = readRoleToken(role);
   if (!token) throw new Error('انتهت الجلسة. سجّل الدخول مرة أخرى.');
   return token;
 };
 
-const saveToken = (token: string): void => {
+const saveToken = (token: string, role: PortalRole): void => {
   if (!isSessionToken(token)) throw new Error('وصل رمز جلسة غير صالح.');
-  sessionStorage.setItem(SESSION_KEY, token);
+  sessionStorage.setItem(SESSION_KEYS[role], token);
 };
 
-const clearToken = (): void => { try { sessionStorage.removeItem(SESSION_KEY); } catch { /* noop */ } };
+const clearToken = (role: PortalRole = roleFromPath()): void => {
+  try { sessionStorage.removeItem(SESSION_KEYS[role]); } catch { /* noop */ }
+};
 
 const mapProfile = (value: unknown): AppProfile | null => {
   const row = Array.isArray(value) ? value[0] : value;
@@ -110,7 +119,7 @@ export const rolePortalClient = {
     return { challengeId: row.challenge_id, phone: normalizeJordanPhone(String(row.normalized_phone)), expiresAt: row.expires_at };
   },
 
-  async verifyOtp(challenge: RoleOtpChallenge, codeInput: string, expectedRole: 'office' | 'admin'): Promise<AppProfile> {
+  async verifyOtp(challenge: RoleOtpChallenge, codeInput: string, expectedRole: PortalRole): Promise<AppProfile> {
     const code = codeInput.normalize('NFKC').replace(/\D/g, '');
     if (!/^\d{6}$/.test(code)) throw new Error('أدخل رمز التحقق المكوّن من 6 أرقام.');
     const data = await rpc<unknown>('verify_phone_otp_flow', {
@@ -127,17 +136,17 @@ export const rolePortalClient = {
       await rpc('revoke_phone_session', { p_session_token: row.session_token }).catch(() => undefined);
       throw new Error(expectedRole === 'office' ? 'هذا الرقم ليس حساب مكتب سياحي.' : 'هذا الرقم ليس حساب إدارة.');
     }
-    saveToken(row.session_token);
+    saveToken(row.session_token, expectedRole);
     return profile;
   },
 
-  async getCurrentProfile(expectedRole: 'office' | 'admin'): Promise<AppProfile | null> {
-    const token = readRoleToken();
+  async getCurrentProfile(expectedRole: PortalRole): Promise<AppProfile | null> {
+    const token = readRoleToken(expectedRole);
     if (!token) return null;
     const { data, error } = await supabaseRest.rpc<unknown>('get_phone_session', { p_session_token: token });
-    if (error) { clearToken(); return null; }
+    if (error) { clearToken(expectedRole); return null; }
     const profile = mapProfile(data);
-    if (!profile || profile.role !== expectedRole || !profile.isActive) { clearToken(); return null; }
+    if (!profile || profile.role !== expectedRole || !profile.isActive) { clearToken(expectedRole); return null; }
     return profile;
   },
 
@@ -149,58 +158,58 @@ export const rolePortalClient = {
 
   office: {
     saveService(serviceId: string | null, payload: Record<string, unknown>) {
-      return rpc<string>('office_save_service', { p_session_token: requireToken(), p_service_id: serviceId, p_payload: payload });
+      return rpc<string>('office_save_service', { p_session_token: requireToken('office'), p_service_id: serviceId, p_payload: payload });
     },
     updateBooking(bookingId: string, status: string, paymentStatus: string | null) {
-      return rpc('office_update_booking', { p_session_token: requireToken(), p_booking_id: bookingId, p_status: status, p_payment_status: paymentStatus });
+      return rpc('office_update_booking', { p_session_token: requireToken('office'), p_booking_id: bookingId, p_status: status, p_payment_status: paymentStatus });
     },
     sendMessage(bookingId: string, body: string) {
-      return rpc<string>('office_send_booking_message', { p_session_token: requireToken(), p_booking_id: bookingId, p_body: body });
+      return rpc<string>('office_send_booking_message', { p_session_token: requireToken('office'), p_booking_id: bookingId, p_body: body });
     },
     saveEmployee(employeeId: string | null, fullName: string, jobTitle: string, permissionLevel: string, isActive: boolean) {
-      return rpc<string>('office_save_employee', { p_session_token: requireToken(), p_employee_id: employeeId, p_full_name: fullName, p_job_title: jobTitle, p_permission_level: permissionLevel, p_is_active: isActive });
+      return rpc<string>('office_save_employee', { p_session_token: requireToken('office'), p_employee_id: employeeId, p_full_name: fullName, p_job_title: jobTitle, p_permission_level: permissionLevel, p_is_active: isActive });
     },
     updateProfile(payload: Record<string, unknown>) {
-      return rpc('office_update_profile', { p_session_token: requireToken(), p_payload: payload });
+      return rpc('office_update_profile', { p_session_token: requireToken('office'), p_payload: payload });
     },
   },
 
   admin: {
     updateOffice(officeId: string, approved: boolean, active: boolean, plan: string) {
-      return rpc('admin_update_office', { p_session_token: requireToken(), p_office_id: officeId, p_is_approved: approved, p_is_active: active, p_plan: plan });
+      return rpc('admin_update_office', { p_session_token: requireToken('admin'), p_office_id: officeId, p_is_approved: approved, p_is_active: active, p_plan: plan });
     },
     updateUser(userId: string, active: boolean) {
-      return rpc('admin_update_user', { p_session_token: requireToken(), p_user_id: userId, p_is_active: active });
+      return rpc('admin_update_user', { p_session_token: requireToken('admin'), p_user_id: userId, p_is_active: active });
     },
     updateBooking(bookingId: string, status: string, paymentStatus: string) {
-      return rpc('admin_update_booking', { p_session_token: requireToken(), p_booking_id: bookingId, p_status: status, p_payment_status: paymentStatus });
+      return rpc('admin_update_booking', { p_session_token: requireToken('admin'), p_booking_id: bookingId, p_status: status, p_payment_status: paymentStatus });
     },
     updateService(serviceId: string, active: boolean, published: boolean) {
-      return rpc('admin_update_service', { p_session_token: requireToken(), p_service_id: serviceId, p_is_active: active, p_published: published });
+      return rpc('admin_update_service', { p_session_token: requireToken('admin'), p_service_id: serviceId, p_is_active: active, p_published: published });
     },
     updateSupport(requestId: string, status: string) {
-      return rpc('admin_update_support', { p_session_token: requireToken(), p_request_id: requestId, p_status: status });
+      return rpc('admin_update_support', { p_session_token: requireToken('admin'), p_request_id: requestId, p_status: status });
     },
     resolveComplaint(complaintId: string, status: string, resolution: string) {
-      return rpc('admin_resolve_complaint', { p_session_token: requireToken(), p_complaint_id: complaintId, p_status: status, p_resolution: resolution });
+      return rpc('admin_resolve_complaint', { p_session_token: requireToken('admin'), p_complaint_id: complaintId, p_status: status, p_resolution: resolution });
     },
     updateSettings(commission: number, maintenance: boolean, supportPhone: string, supportEmail: string) {
-      return rpc('admin_update_settings', { p_session_token: requireToken(), p_commission: commission, p_maintenance: maintenance, p_support_phone: supportPhone, p_support_email: supportEmail });
+      return rpc('admin_update_settings', { p_session_token: requireToken('admin'), p_commission: commission, p_maintenance: maintenance, p_support_phone: supportPhone, p_support_email: supportEmail });
     },
     saveAd(adId: string | null, payload: Record<string, unknown>) {
-      return rpc<string>('admin_save_ad', { p_session_token: requireToken(), p_ad_id: adId, p_payload: payload });
+      return rpc<string>('admin_save_ad', { p_session_token: requireToken('admin'), p_ad_id: adId, p_payload: payload });
     },
     saveCategory(categoryId: string | null, payload: Record<string, unknown>) {
-      return rpc<string>('admin_save_category', { p_session_token: requireToken(), p_category_id: categoryId, p_payload: payload });
+      return rpc<string>('admin_save_category', { p_session_token: requireToken('admin'), p_category_id: categoryId, p_payload: payload });
     },
     createOffice(payload: Record<string, unknown>) {
-      return rpc<Record<string, unknown>>('admin_create_office', { p_session_token: requireToken(), p_payload: payload });
+      return rpc<Record<string, unknown>>('admin_create_office', { p_session_token: requireToken('admin'), p_payload: payload });
     },
   },
 
-  async logout(): Promise<void> {
-    const token = readRoleToken();
-    clearToken();
+  async logout(role: PortalRole = roleFromPath()): Promise<void> {
+    const token = readRoleToken(role);
+    clearToken(role);
     if (token) await supabaseRest.rpc('revoke_phone_session', { p_session_token: token }).catch(() => undefined);
   },
 };
