@@ -103,6 +103,7 @@ as $$
 declare
   v_user public.phone_users%rowtype;
   v_office_id uuid;
+  v_rows integer;
 begin
   v_user := private.role_session_user(p_session_token, array['office']::public.app_role[]);
   select o.id into v_office_id
@@ -123,9 +124,10 @@ begin
       payment_status = coalesce(p_payment_status::public.payment_state, b.payment_status),
       updated_at = now()
   where b.id = p_booking_id and b.office_id = v_office_id;
+  get diagnostics v_rows = row_count;
   perform set_config('safretak.role_portal_booking_update', '', true);
 
-  if not found then
+  if v_rows = 0 then
     raise exception 'BOOKING_NOT_FOUND' using errcode = 'P0001';
   end if;
 end;
@@ -144,6 +146,7 @@ set search_path = ''
 as $$
 declare
   v_user public.phone_users%rowtype;
+  v_rows integer;
 begin
   v_user := private.role_session_user(p_session_token, array['admin']::public.app_role[]);
   if p_status not in ('Pending', 'Confirmed', 'Completed', 'Cancelled')
@@ -157,9 +160,10 @@ begin
       payment_status = p_payment_status::public.payment_state,
       updated_at = now()
   where id = p_booking_id;
+  get diagnostics v_rows = row_count;
   perform set_config('safretak.role_portal_booking_update', '', true);
 
-  if not found then
+  if v_rows = 0 then
     raise exception 'BOOKING_NOT_FOUND' using errcode = 'P0001';
   end if;
 end;
