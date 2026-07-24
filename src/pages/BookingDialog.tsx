@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { formatDate, formatMoney, serviceKinds } from '../domain';
 import { createTravelerDraft, requiresPassport, requiresTravelerManifest, sanitizeTravelerManifest, syncTravelerDrafts, travelerManifestCount, validateTravelerManifest, type BookingTravelerDraft } from '../bookingPassengers';
 import type { BookingDraft, CatalogService, FlightPassengerType, PaymentMethod, TravelerBooking } from '../types';
+import { publicPaymentSettingsClient } from '../services/businessPortalClient';
 import { addDaysIso, cleanMultilineText, cleanSingleLineText, getBookableDates, getJordanTodayIso, isBookableDate, isCouponCode, isPaymentMethod, isPaymentReference } from '../validation';
 
 interface BookingDialogProps {
@@ -53,6 +54,7 @@ export function BookingDialog({ service, onClose, onSubmit, onViewBookings, trav
   const [notes, setNotes] = useState('');
   const [travelers, setTravelers] = useState<BookingTravelerDraft[]>(() => [createTravelerDraft(0, travelerName)]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CliQ');
+  const [availablePaymentMethods, setAvailablePaymentMethods] = useState<PaymentMethod[]>(['CliQ', 'eFAWATEERcom', 'Cash at Office']);
   const [paymentReference, setPaymentReference] = useState('');
   const [couponCode, setCouponCode] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -101,6 +103,20 @@ export function BookingDialog({ service, onClose, onSubmit, onViewBookings, trav
   }, [flightAdults, flightChildren, seatPassengerCount, service.type]);
 
   useEffect(() => {
+    let active = true;
+    void publicPaymentSettingsClient.load().then((methods) => {
+      if (!active) return;
+      setAvailablePaymentMethods(methods);
+      setPaymentMethod((current) => {
+        const nextMethod = methods.includes(current) ? current : methods[0] || 'Cash at Office';
+        if (nextMethod === 'Cash at Office') setPaymentReference('');
+        return nextMethod;
+      });
+    });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     dialogRef.current?.focus();
@@ -127,7 +143,7 @@ export function BookingDialog({ service, onClose, onSubmit, onViewBookings, trav
   const validateTravelers = (): string | null => validateTravelerManifest(travelers, service.type, manifestCount, manifestTravelDate);
 
   const validatePayment = (): string | null => {
-    if (!isPaymentMethod(paymentMethod)) return 'اختر طريقة دفع صحيحة.';
+    if (!isPaymentMethod(paymentMethod) || !availablePaymentMethods.includes(paymentMethod)) return 'اختر طريقة دفع متاحة.';
     if (paymentMethod !== 'Cash at Office' && !isPaymentReference(cleanSingleLineText(paymentReference, 40))) return 'أدخل الرقم المرجعي للحوالة أو السداد.';
     const coupon = cleanSingleLineText(couponCode, 30).toUpperCase();
     if (coupon && !isCouponCode(coupon)) return 'رمز الخصم غير صالح.';
@@ -257,7 +273,7 @@ export function BookingDialog({ service, onClose, onSubmit, onViewBookings, trav
             </div> : null}
 
             {step === 'payment' ? <div className="booking-payment screen-enter">
-              <section className="choice-card-grid payment-choices">{(['CliQ','eFAWATEERcom','Cash at Office'] as PaymentMethod[]).map((method) => <label key={method} className={paymentMethod === method ? 'selected' : ''}><input type="radio" name="payment-method" checked={paymentMethod === method} onChange={() => { setPaymentMethod(method); if (method === 'Cash at Office') setPaymentReference(''); }} /><div><strong>{method === 'CliQ' ? 'CliQ' : method === 'eFAWATEERcom' ? 'إي فواتيركم' : 'الدفع في المكتب'}</strong><span>{method === 'Cash at Office' ? 'يؤكد المكتب عملية الدفع لاحقًا' : 'أدخل مرجع العملية بعد التحويل'}</span></div></label>)}</section>
+              <section className="choice-card-grid payment-choices">{availablePaymentMethods.map((method) => <label key={method} className={paymentMethod === method ? 'selected' : ''}><input type="radio" name="payment-method" checked={paymentMethod === method} onChange={() => { setPaymentMethod(method); if (method === 'Cash at Office') setPaymentReference(''); }} /><div><strong>{method === 'CliQ' ? 'CliQ' : method === 'eFAWATEERcom' ? 'إي فواتيركم' : 'الدفع في المكتب'}</strong><span>{method === 'Cash at Office' ? 'يؤكد المكتب عملية الدفع لاحقًا' : 'أدخل مرجع العملية بعد التحويل'}</span></div></label>)}</section>
               {paymentMethod !== 'Cash at Office' ? <label className="field-group"><span>{paymentMethod === 'CliQ' ? 'الرقم المرجعي لحوالة CliQ' : 'رقم إيصال إي فواتيركم'}</span><input value={paymentReference} onChange={(event) => setPaymentReference(event.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, '').slice(0, 40))} placeholder={paymentMethod === 'CliQ' ? 'TXN998230' : 'EFW-102930'} dir="ltr" maxLength={40} /></label> : null}
               <label className="field-group"><span>رمز خصم (اختياري)</span><input value={couponCode} onChange={(event) => setCouponCode(event.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, '').slice(0, 30))} placeholder="رمز الكوبون" dir="ltr" maxLength={30} /><small className="field-hint">يتم التحقق من الرمز وحساب الخصم داخل قاعدة البيانات عند الإرسال.</small></label>
               <div className="payment-safety"><ShieldAlert size={20} /><div><strong>لا يتم تسجيل دفعة ناجحة تلقائيًا</strong><p>المرجع يُرسل للمراجعة، وحالة الدفع تتغير فقط بعد التأكيد الحقيقي.</p></div></div>
