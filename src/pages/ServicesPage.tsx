@@ -2,6 +2,7 @@ import { Filter, Heart, RotateCcw, Search, SlidersHorizontal, Sparkles } from 'l
 import { useEffect, useMemo, useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
 import { ServiceCard } from '../components/ServiceCard';
+import { SmartTravelSearch } from '../components/SmartTravelSearch';
 import { serviceKinds } from '../domain';
 import type { CatalogService, ServiceKind, TravelOffice } from '../types';
 import { cleanSearchText, getBookableDates, getJordanTodayIso } from '../validation';
@@ -55,6 +56,8 @@ export function ServicesPage({ services, offices, initialKind, favoritesOnly = f
       <div><span className="eyebrow"><Sparkles size={14} />{favoritesOnly ? 'اختياراتك المحفوظة' : 'دليل الخدمات السياحية'}</span><h1>{favoritesOnly ? 'الخدمات المفضلة' : 'اكتشف رحلتك القادمة'}</h1><p>{favoritesOnly ? 'كل الخدمات التي حفظتها للرجوع إليها بسرعة.' : 'رحلات وفنادق وطيران ونقل وخدمات سفر من مكاتب سياحة معتمدة.'}</p></div>
       <div className="services-hero-counter"><SlidersHorizontal size={27} /><strong>{filtered.length}</strong><span>خدمة مطابقة</span></div>
     </section>
+
+    {!favoritesOnly ? <SmartTravelSearch services={services} onSelectService={onSelectService} /> : null}
 
     {!favoritesOnly ? <section className="service-kind-showcase" aria-label="تصنيفات الخدمات">
       <button type="button" className={kind === 'all' ? 'active' : ''} onClick={() => setKind('all')}><span><SlidersHorizontal size={21} /></span><strong>كل الخدمات</strong><small>{services.length} خدمة</small></button>
