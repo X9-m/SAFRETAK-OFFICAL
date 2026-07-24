@@ -16,6 +16,7 @@ export type BookingStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
 export type PaymentStatus = 'unpaid' | 'paid';
 export type PaymentMethod = 'CliQ' | 'eFAWATEERcom' | 'Cash at Office';
 export type TravelerDocumentType = 'national_id' | 'passport';
+export type FlightPassengerType = 'adult' | 'child' | 'infant';
 
 export interface AppProfile {
   id: string;
@@ -94,13 +95,14 @@ export interface PlatformAd {
   link: string | null;
 }
 
-
 export interface BookingTraveler {
   fullName: string;
   nationality: string;
   documentType: TravelerDocumentType;
   documentNumber: string;
   documentExpiry: string | null;
+  passengerType?: FlightPassengerType;
+  birthDate?: string | null;
 }
 
 export interface TravelerBooking {
@@ -179,7 +181,6 @@ export interface ServiceReview {
   createdAt: string;
   isMine: boolean;
 }
-
 
 export interface BookingDocument {
   id: string;
