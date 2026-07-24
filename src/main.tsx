@@ -1,12 +1,14 @@
-import { StrictMode } from 'react';
+import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
-import { ExtendedRoleApp, PortalFeatureDock } from './ExtendedRoleApp.tsx';
-import { RoleApp } from './RoleApp.tsx';
 import './index.css';
 import './role-portal.css';
 import './smart-features.css';
 import './business-portals.css';
+
+const App = lazy(() => import('./App.tsx'));
+const RoleApp = lazy(() => import('./RoleApp.tsx').then((module) => ({ default: module.RoleApp })));
+const ExtendedRoleApp = lazy(() => import('./ExtendedRoleApp.tsx').then((module) => ({ default: module.ExtendedRoleApp })));
+const PortalFeatureDock = lazy(() => import('./ExtendedRoleApp.tsx').then((module) => ({ default: module.PortalFeatureDock })));
 
 const path = window.location.pathname.replace(/\/+$/, '') || '/';
 const application = path === '/office/customers'
@@ -22,5 +24,9 @@ const application = path === '/office/customers'
           : <App />;
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>{application}</StrictMode>,
+  <StrictMode>
+    <Suspense fallback={<main className="loading-screen" dir="rtl" aria-live="polite"><p>جاري تحميل سفرتك...</p></main>}>
+      {application}
+    </Suspense>
+  </StrictMode>,
 );
