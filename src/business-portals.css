@@ -1,0 +1,79 @@
+.portal-feature-dock {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 70;
+  display: flex;
+  gap: .5rem;
+  padding: .45rem;
+  border: 1px solid rgba(213,173,36,.25);
+  border-radius: 1rem;
+  background: rgba(7,25,19,.96);
+  box-shadow: 0 18px 45px rgba(0,0,0,.38);
+  backdrop-filter: blur(14px);
+}
+.portal-feature-dock a { display:flex; align-items:center; gap:.4rem; padding:.65rem .75rem; border-radius:.7rem; color:#e7c13d; text-decoration:none; font-size:.68rem; font-weight:800; transition:160ms ease; }
+.portal-feature-dock a:hover { background:rgba(213,173,36,.1); transform:translateY(-1px); }
+.extended-sidebar nav a { display:flex; align-items:center; gap:.65rem; width:100%; padding:.72rem .8rem; border:1px solid transparent; border-radius:.75rem; color:rgba(255,255,255,.64); text-decoration:none; font-size:.74rem; transition:160ms ease; }
+.extended-sidebar nav a:hover { color:#fff; background:rgba(255,255,255,.04); }
+.extended-sidebar nav a.active { border-color:rgba(213,173,36,.22); background:rgba(213,173,36,.1); color:#e7c13d; }
+.portal-back-link { display:flex; align-items:center; gap:.45rem; padding:.65rem .75rem; border:1px solid rgba(255,255,255,.07); border-radius:.7rem; color:#fff; text-decoration:none; font-size:.68rem; }
+.business-toolbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+.business-toolbar > span { color:#e7c13d; font-size:.7rem; font-weight:800; }
+.crm-layout { display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:1rem; align-items:start; }
+.crm-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
+.crm-customer-card { display:grid; grid-template-columns:auto minmax(0,1fr); gap:.75rem; padding:1rem; border:1px solid rgba(255,255,255,.07); border-radius:1rem; background:rgba(15,45,35,.75); color:#fff; text-align:right; cursor:pointer; transition:160ms ease; }
+.crm-customer-card:hover,.crm-customer-card.active { border-color:rgba(213,173,36,.48); background:rgba(19,55,43,.92); transform:translateY(-1px); }
+.crm-customer-card > div:nth-child(2) { display:flex; flex-direction:column; gap:.18rem; min-width:0; }
+.crm-customer-card strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.8rem; }
+.crm-customer-card span,.crm-customer-card small { color:rgba(255,255,255,.43); font-size:.64rem; }
+.crm-customer-card dl { grid-column:1/-1; display:grid; grid-template-columns:repeat(2,1fr); gap:.5rem; margin:.25rem 0 0; padding-top:.65rem; border-top:1px solid rgba(255,255,255,.06); }
+.crm-customer-card dl div { display:flex; justify-content:space-between; gap:.5rem; }
+.crm-customer-card dt { color:rgba(255,255,255,.42); font-size:.61rem; }
+.crm-customer-card dd { margin:0; color:#e7c13d; font-size:.68rem; font-weight:800; }
+.crm-details { position:sticky; top:94px; min-height:360px; }
+.crm-details > header,.finance-editor > header,.settlement-editor > header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+.crm-details > header > div { display:flex; align-items:center; gap:.7rem; }
+.crm-details h2,.finance-editor h2,.settlement-editor h2 { margin:0; color:#fff; }
+.crm-details header p { margin:.2rem 0 0; color:rgba(255,255,255,.4); font-size:.65rem; }
+.compact-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.compact-stats .role-stat-card { min-height:78px; }
+.customer-bookings { display:grid; gap:.5rem; max-height:430px; overflow-y:auto; }
+.customer-bookings article,.settlements-history article { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.7rem; border:1px solid rgba(255,255,255,.055); border-radius:.7rem; background:rgba(255,255,255,.025); }
+.customer-bookings article > div,.settlements-history article > div { display:flex; flex-direction:column; gap:.2rem; min-width:0; }
+.customer-bookings strong,.settlements-history strong { font-size:.72rem; }
+.customer-bookings small,.settlements-history small { color:rgba(255,255,255,.4); font-size:.61rem; }
+.customer-bookings b,.settlements-history b { color:#e7c13d; font-size:.7rem; }
+.transaction-type-switch { display:grid; grid-template-columns:repeat(2,1fr); gap:.6rem; margin-bottom:.85rem; }
+.transaction-type-switch button { display:flex; align-items:center; justify-content:center; gap:.4rem; padding:.7rem; border:1px solid rgba(255,255,255,.08); border-radius:.7rem; background:rgba(255,255,255,.025); color:rgba(255,255,255,.6); cursor:pointer; font-weight:800; }
+.transaction-type-switch button.active.income { border-color:rgba(34,197,94,.5); background:rgba(34,197,94,.1); color:#86efac; }
+.transaction-type-switch button.active.expense { border-color:rgba(239,68,68,.5); background:rgba(239,68,68,.1); color:#fca5a5; }
+.accounting-row { grid-template-columns:.75fr .65fr 1.5fr .85fr .8fr .7fr; }
+.billing-row { grid-template-columns:1.35fr .75fr .85fr .85fr .85fr 1.1fr; }
+.money-income { color:#86efac !important; font-weight:800; }
+.money-expense { color:#fca5a5 !important; font-weight:800; }
+.icon-action.danger { border-color:rgba(239,68,68,.2); background:rgba(239,68,68,.07); color:#fca5a5; }
+.finance-settings { margin-bottom:1rem; }
+.payment-toggle-list { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; }
+.payment-toggle-list label { flex-direction:row; align-items:center; min-height:52px; padding:.65rem; border:1px solid rgba(255,255,255,.07); border-radius:.7rem; background:rgba(255,255,255,.025); color:#fff; }
+.payment-toggle-list input { width:auto; accent-color:#d5ad24; }
+.settle-button { min-width:76px !important; padding:.5rem .6rem !important; }
+.settlements-history { margin-top:1rem; }
+.settlements-history article + article { margin-top:.5rem; }
+.flight-success-ticket { width:min(520px,100%); display:grid; gap:.45rem; margin:.75rem auto; padding:.85rem; border:1px dashed rgba(213,173,36,.5); border-radius:.9rem; background:rgba(213,173,36,.06); }
+.flight-success-ticket > div { display:flex; align-items:center; justify-content:center; gap:.55rem; color:#e7c13d; font-weight:800; }
+.flight-success-ticket small { color:rgba(255,255,255,.6) !important; }
+
+@media (max-width:1100px) {
+  .crm-layout { grid-template-columns:1fr; }
+  .crm-details { position:static; }
+}
+@media (max-width:760px) {
+  .portal-feature-dock { right:.5rem; left:.5rem; bottom:5.2rem; justify-content:center; }
+  .portal-feature-dock a { flex:1; justify-content:center; }
+  .crm-cards { grid-template-columns:1fr; }
+  .business-toolbar { align-items:stretch; flex-direction:column; }
+  .business-toolbar .role-search { width:100%; }
+  .payment-toggle-list { grid-template-columns:1fr; }
+  .extended-role-content { padding-bottom:7rem; }
+}
