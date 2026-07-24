@@ -1,4 +1,4 @@
-import type { BookingTraveler, ServiceKind, TravelerDocumentType } from './types.ts';
+import type { BookingTraveler, FlightPassengerType, ServiceKind, TravelerDocumentType } from './types.ts';
 import {
   addDaysIso,
   cleanSingleLineText,
@@ -14,6 +14,8 @@ export interface BookingTravelerDraft {
   documentType: TravelerDocumentType;
   documentNumber: string;
   documentExpiry: string;
+  passengerType: FlightPassengerType;
+  birthDate: string;
 }
 
 const passportRequiredKinds = new Set<ServiceKind>(['intl_trip', 'flight', 'hajj_umrah', 'insurance', 'visa']);
@@ -34,6 +36,8 @@ export const createTravelerDraft = (index: number, primaryName = ''): BookingTra
   documentType: 'national_id',
   documentNumber: '',
   documentExpiry: '',
+  passengerType: 'adult',
+  birthDate: '',
 });
 
 export const syncTravelerDrafts = (
@@ -47,8 +51,28 @@ export const syncTravelerDrafts = (
     ...existing,
     fullName: existing.fullName || (index === 0 ? cleanSingleLineText(primaryName, 100) : ''),
     documentType: forcePassport ? 'passport' : existing.documentType,
+    passengerType: existing.passengerType || 'adult',
+    birthDate: existing.birthDate || '',
   };
 });
+
+const yearsBefore = (isoDate: string, years: number): string => {
+  if (!isIsoDate(isoDate)) return '';
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const targetYear = year - years;
+  const lastDay = new Date(Date.UTC(targetYear, month, 0)).getUTCDate();
+  return `${targetYear.toString().padStart(4, '0')}-${month.toString().padStart(2, '0')}-${Math.min(day, lastDay).toString().padStart(2, '0')}`;
+};
+
+const validateFlightAge = (traveler: BookingTravelerDraft, travelDate: string, label: string): string | null => {
+  if (!isIsoDate(traveler.birthDate) || traveler.birthDate > travelDate) return `${label}: أدخل تاريخ ميلاد صحيحًا.`;
+  const twelveYearsBefore = yearsBefore(travelDate, 12);
+  const twoYearsBefore = yearsBefore(travelDate, 2);
+  if (traveler.passengerType === 'adult' && traveler.birthDate > twelveYearsBefore) return `${label}: عمر البالغ يجب أن يكون 12 سنة أو أكثر يوم السفر.`;
+  if (traveler.passengerType === 'child' && (traveler.birthDate <= twelveYearsBefore || traveler.birthDate > twoYearsBefore)) return `${label}: عمر الطفل يجب أن يكون من سنتين إلى أقل من 12 سنة.`;
+  if (traveler.passengerType === 'infant' && traveler.birthDate <= twoYearsBefore) return `${label}: عمر الرضيع يجب أن يكون أقل من سنتين يوم السفر.`;
+  return null;
+};
 
 export const validateTravelerManifest = (
   travelers: BookingTravelerDraft[],
@@ -66,6 +90,11 @@ export const validateTravelerManifest = (
     const label = kind === 'car' ? 'السائق' : `المسافر ${index + 1}`;
     if (!isValidFullName(traveler.fullName)) return `أدخل اسم ${label} بشكل صحيح.`;
     if (!isValidNationality(traveler.nationality)) return `أدخل جنسية ${label} بشكل صحيح.`;
+    if (kind === 'flight') {
+      if (!['adult', 'child', 'infant'].includes(traveler.passengerType)) return `${label}: اختر فئة عمر صحيحة.`;
+      const ageError = validateFlightAge(traveler, travelDate, label);
+      if (ageError) return ageError;
+    }
     if (passportRequired && traveler.documentType !== 'passport') return `${label}: جواز السفر مطلوب لهذه الخدمة.`;
     if (traveler.documentType !== 'national_id' && traveler.documentType !== 'passport') return `${label}: اختر نوع وثيقة صحيحًا.`;
     if (!isValidDocumentNumber(traveler.documentNumber)) return `${label}: أدخل رقم وثيقة صحيحًا.`;
@@ -83,6 +112,8 @@ export const sanitizeTravelerManifest = (travelers: BookingTravelerDraft[]): Boo
   documentType: traveler.documentType,
   documentNumber: cleanSingleLineText(traveler.documentNumber, 20).toUpperCase(),
   documentExpiry: traveler.documentType === 'passport' && isIsoDate(traveler.documentExpiry) ? traveler.documentExpiry : null,
+  passengerType: traveler.passengerType,
+  birthDate: isIsoDate(traveler.birthDate) ? traveler.birthDate : null,
 }));
 
 export const readBookingTravelers = (value: unknown): BookingTraveler[] => {
@@ -96,9 +127,13 @@ export const readBookingTravelers = (value: unknown): BookingTraveler[] => {
     const documentNumber = cleanSingleLineText(row.document_number ?? row.documentNumber, 20).toUpperCase();
     const rawExpiry = row.document_expiry ?? row.documentExpiry;
     const documentExpiry = isIsoDate(rawExpiry) ? rawExpiry : null;
+    const rawPassengerType = row.passenger_type ?? row.passengerType;
+    const passengerType = rawPassengerType === 'adult' || rawPassengerType === 'child' || rawPassengerType === 'infant' ? rawPassengerType : undefined;
+    const rawBirthDate = row.birth_date ?? row.birthDate;
+    const birthDate = isIsoDate(rawBirthDate) ? rawBirthDate : null;
     const maskedDocument = /^•{4,6}[A-Z0-9]{4}$/.test(documentNumber) || documentNumber === '••••';
     if (!isValidFullName(fullName) || !isValidNationality(nationality) || !documentType || (!isValidDocumentNumber(documentNumber) && !maskedDocument)) return null;
-    return { fullName, nationality, documentType, documentNumber, documentExpiry };
+    return { fullName, nationality, documentType, documentNumber, documentExpiry, passengerType, birthDate };
   }).filter((item): item is BookingTraveler => Boolean(item));
 };
 
