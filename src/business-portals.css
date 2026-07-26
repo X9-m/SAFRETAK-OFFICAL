@@ -64,6 +64,46 @@
 .flight-success-ticket > div { display:flex; align-items:center; justify-content:center; gap:.55rem; color:#e7c13d; font-weight:800; }
 .flight-success-ticket small { color:rgba(255,255,255,.6) !important; }
 
+/* Office and admin modal scroll containment */
+html:has(.role-modal-backdrop),
+body:has(.role-modal-backdrop) {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body:has(.role-modal-backdrop) .role-bottom-nav,
+body:has(.role-modal-backdrop) .portal-feature-dock {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.role-modal-backdrop {
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  isolation: isolate;
+}
+
+.role-dialog {
+  min-height: 0;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.role-chat,
+.role-table-card,
+.customer-bookings,
+.settlements-history {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 @media (max-width:1100px) {
   .crm-layout { grid-template-columns:1fr; }
   .crm-details { position:static; }
@@ -76,4 +116,18 @@
   .business-toolbar .role-search { width:100%; }
   .payment-toggle-list { grid-template-columns:1fr; }
   .extended-role-content { padding-bottom:7rem; }
+
+  .role-modal-backdrop {
+    place-items: end center;
+    padding: max(env(safe-area-inset-top), 8px) 0 0;
+  }
+
+  .role-dialog,
+  .role-dialog-wide {
+    width: 100%;
+    max-width: none;
+    max-height: calc(100dvh - max(env(safe-area-inset-top), 8px));
+    border-radius: 1.15rem 1.15rem 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
