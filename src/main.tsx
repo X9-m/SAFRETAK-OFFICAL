@@ -6,21 +6,19 @@ import './smart-features.css';
 import './business-portals.css';
 
 const App = lazy(() => import('./App.tsx'));
-const RoleApp = lazy(() => import('./RoleApp.tsx').then((module) => ({ default: module.RoleApp })));
-const ExtendedRoleApp = lazy(() => import('./ExtendedRoleApp.tsx').then((module) => ({ default: module.ExtendedRoleApp })));
-const PortalFeatureDock = lazy(() => import('./ExtendedRoleApp.tsx').then((module) => ({ default: module.PortalFeatureDock })));
+const RoleEntry = lazy(() => import('./RoleEntry.tsx').then((module) => ({ default: module.RoleEntry })));
 
 const path = window.location.pathname.replace(/\/+$/, '') || '/';
 const application = path === '/office/customers'
-  ? <ExtendedRoleApp page="customers" role="office" />
+  ? <RoleEntry expectedRole="office" page="customers" />
   : path === '/office/accounting'
-    ? <ExtendedRoleApp page="accounting" role="office" />
+    ? <RoleEntry expectedRole="office" page="accounting" />
     : path === '/admin/billing'
-      ? <ExtendedRoleApp page="billing" role="admin" />
+      ? <RoleEntry expectedRole="admin" page="billing" />
       : path.startsWith('/office')
-        ? <><RoleApp expectedRole="office" /><PortalFeatureDock role="office" /></>
+        ? <RoleEntry expectedRole="office" />
         : path.startsWith('/admin')
-          ? <><RoleApp expectedRole="admin" /><PortalFeatureDock role="admin" /></>
+          ? <RoleEntry expectedRole="admin" />
           : <App />;
 
 createRoot(document.getElementById('root')!).render(
