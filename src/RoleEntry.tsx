@@ -96,15 +96,23 @@ export function RoleEntry({ expectedRole, page = 'portal' }: { expectedRole: Por
       if (active) { setHasSession(Boolean(profile)); setChecking(false); }
     };
     void check();
+    const onCreated = (event: Event) => {
+      if ((event as CustomEvent<PortalRole>).detail !== expectedRole) return;
+      setHasSession(true);
+      setUseOtp(false);
+      setChecking(false);
+    };
     const onCleared = (event: Event) => {
       if ((event as CustomEvent<PortalRole>).detail !== expectedRole) return;
       setHasSession(false);
       setUseOtp(false);
       setChecking(false);
     };
+    window.addEventListener('role-session-created', onCreated);
     window.addEventListener('role-session-cleared', onCleared);
     return () => {
       active = false;
+      window.removeEventListener('role-session-created', onCreated);
       window.removeEventListener('role-session-cleared', onCleared);
     };
   }, [expectedRole]);
@@ -118,6 +126,7 @@ export function RoleEntry({ expectedRole, page = 'portal' }: { expectedRole: Por
 
   if (checking) return <main className="loading-screen"><div className="loading-logo"><Loader2 className="spin" size={34} /><span className="loading-name">سفرتك</span></div></main>;
   if (!hasSession && !useOtp) return <PasswordLogin expectedRole={expectedRole} onAuthenticated={() => setHasSession(true)} onUseOtp={() => setUseOtp(true)} />;
+  if (!hasSession) return <RoleApp expectedRole={expectedRole} />;
 
   return <>{content}<PortalFeatureDock role={expectedRole} /></>;
 }
