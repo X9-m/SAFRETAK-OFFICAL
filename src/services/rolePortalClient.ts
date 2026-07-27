@@ -42,6 +42,9 @@ const validRoles = new Set<AppRole>(['traveler', 'office', 'admin']);
 const friendlyError = (message?: string): string => {
   const text = message || '';
   const entries: Array<[string, string]> = [
+    ['INVALID_CREDENTIALS', 'رقم الهاتف أو كلمة المرور غير صحيحة.'],
+    ['ACCOUNT_LOCKED', 'تم قفل الحساب مؤقتًا بعد محاولات دخول متكررة. حاول بعد 15 دقيقة.'],
+    ['PASSWORD_NOT_CONFIGURED', 'لم يتم إعداد كلمة مرور لهذا الحساب. استخدم رمز الهاتف أو تواصل مع الإدارة.'],
     ['FORBIDDEN', 'انتهت الجلسة أو لا تملك صلاحية الدخول لهذه البوابة.'],
     ['ACCOUNT_NOT_FOUND', 'لا يوجد حساب مرتبط بهذا الرقم.'],
     ['ACCOUNT_DISABLED', 'الحساب موقوف. تواصل مع إدارة المنصة.'],
@@ -75,13 +78,23 @@ const requireToken = (role: PortalRole = roleFromPath()): string => {
   return token;
 };
 
+const dispatchSessionEvent = (name: 'role-session-created' | 'role-session-cleared', role: PortalRole): void => {
+  window.dispatchEvent(new CustomEvent(name, { detail: role }));
+};
+
 const saveToken = (token: string, role: PortalRole): void => {
   if (!isSessionToken(token)) throw new Error('وصل رمز جلسة غير صالح.');
-  sessionStorage.setItem(SESSION_KEYS[role], token);
+  try {
+    sessionStorage.setItem(SESSION_KEYS[role], token);
+  } catch {
+    throw new Error('تعذر حفظ الجلسة في هذا المتصفح. فعّل تخزين الموقع وحاول مرة أخرى.');
+  }
+  dispatchSessionEvent('role-session-created', role);
 };
 
 const clearToken = (role: PortalRole = roleFromPath()): void => {
   try { sessionStorage.removeItem(SESSION_KEYS[role]); } catch { /* noop */ }
+  dispatchSessionEvent('role-session-cleared', role);
 };
 
 const mapProfile = (value: unknown): AppProfile | null => {
@@ -110,6 +123,28 @@ const rpc = async <T = unknown>(name: string, parameters: Record<string, unknown
 };
 
 export const rolePortalClient = {
+  async loginWithPassword(phoneInput: string, password: string, expectedRole: PortalRole): Promise<AppProfile> {
+    const phone = normalizeJordanPhone(phoneInput);
+    if (!isValidJordanPhone(phone)) throw new Error('أدخل رقم هاتف أردني صحيح.');
+    if (password.length < 10 || password.length > 128) throw new Error('كلمة المرور يجب أن تكون بين 10 و128 حرفًا.');
+    const data = await rpc<unknown>('login_role_with_password', {
+      p_phone: phone,
+      p_password: password,
+      p_expected_role: expectedRole,
+    });
+    const row = Array.isArray(data) ? data[0] : null;
+    if (!isRecord(row) || row.success !== true || typeof row.session_token !== 'string') {
+      throwRpc(isRecord(row) && typeof row.failure_code === 'string' ? row.failure_code : undefined);
+    }
+    const profile = mapProfile(row);
+    if (!profile || !profile.isActive || profile.role !== expectedRole) {
+      await rpc('revoke_phone_session', { p_session_token: row.session_token }).catch(() => undefined);
+      throw new Error(expectedRole === 'office' ? 'هذا الحساب ليس حساب مكتب سياحي.' : 'هذا الحساب ليس حساب إدارة.');
+    }
+    saveToken(row.session_token, expectedRole);
+    return profile;
+  },
+
   async requestOtp(phoneInput: string): Promise<RoleOtpChallenge> {
     const phone = normalizeJordanPhone(phoneInput);
     if (!isValidJordanPhone(phone)) throw new Error('أدخل رقم هاتف أردني صحيح.');
