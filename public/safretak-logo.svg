@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+  <title id="title">سفرتك</title>
+  <desc id="desc">هوية سفرتك الجديدة بطائرة وحافلة ونخلة ووجهات سفر</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dcecff"/>
+      <stop offset="0.7" stop-color="#eef7ff"/>
+      <stop offset="1" stop-color="#f7fbff"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1684f7"/>
+      <stop offset="1" stop-color="#0756b8"/>
+    </linearGradient>
+    <linearGradient id="bus" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#eaf3ff"/>
+      <stop offset="1" stop-color="#b9dcff"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="22" stdDeviation="22" flood-color="#315b8e" flood-opacity="0.22"/>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#sky)"/>
+  <circle cx="180" cy="280" r="120" fill="#fff" opacity="0.44" filter="url(#soft)"/>
+  <circle cx="1015" cy="315" r="160" fill="#fff" opacity="0.32" filter="url(#soft)"/>
+  <g opacity="0.4" fill="#b9d8f8">
+    <path d="M0 735h85v-105h45v105h45V602h62v133h45V650h72v85h45v-154h64v154h48v-88h55v88h45v-124h60v124h45v-73h55v73h45v-189h34v-126h18v126h38v189h52V625h58v110h75v115H0z"/>
+  </g>
+  <g opacity="0.64" fill="#c9e0f8">
+    <path d="M23 704c52-73 133-92 208-37 24 18 44 42 57 68H0c5-11 13-22 23-31z"/>
+    <path d="M877 704c56-78 140-91 218-30 20 16 38 37 51 61H847c8-11 18-21 30-31z"/>
+  </g>
+  <g transform="translate(648 150)" stroke="#2d77c7" stroke-width="13" stroke-linecap="round" fill="none" opacity="0.92">
+    <path d="M0 420c50-139 76-263 64-371"/>
+    <path d="M64 55C6 31-54 28-125 52c67 9 118 29 170 71"/>
+    <path d="M67 62c48-51 100-79 168-91-55 43-91 84-122 145"/>
+    <path d="M67 66c7-72 34-128 85-178-24 73-33 128-29 195"/>
+    <path d="M62 66c-47-57-100-91-166-109 50 48 83 93 108 153"/>
+    <path d="M50 95c-74-7-133 6-192 45 67-6 125 4 186 29"/>
+    <path d="M78 98c74-22 140-20 207 5-70 9-127 28-184 62"/>
+  </g>
+  <g transform="translate(135 110) rotate(-12 300 220)" filter="url(#shadow)">
+    <path d="M42 205L355 84c34-13 78-4 94 19 15 23-5 53-43 67l-95 35-69 95-52 20 28-86-99 37-55 58-38 14 21-52-64 24-35-22 84-48-30-36z" fill="url(#bus)" stroke="#4d86c7" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M116 181l91-35 25 57-96 36z" fill="#1884f5" opacity="0.92"/>
+    <ellipse cx="349" cy="135" rx="54" ry="22" fill="#163b67"/>
+    <ellipse cx="222" cy="184" rx="46" ry="20" fill="#163b67"/>
+  </g>
+  <path d="M278 355c-151 105-191 315-63 470" fill="none" stroke="url(#blue)" stroke-width="42" stroke-linecap="round" opacity="0.82"/>
+  <path d="M278 355c-151 105-191 315-63 470" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+  <g transform="translate(285 420)" filter="url(#shadow)">
+    <path d="M62 59c0-34 28-61 62-61h427c70 0 126 56 126 126v235c0 46-37 83-83 83H123c-67 0-121-54-121-121V122c0-34 27-63 60-63z" fill="url(#bus)" stroke="#4c85c5" stroke-width="8"/>
+    <path d="M113 43h414c49 0 88 40 88 89v118H81V76c0-18 14-33 32-33z" fill="#173a62"/>
+    <path d="M86 278h536v70H86z" fill="url(#blue)"/>
+    <path d="M21 319h635v32H21z" fill="#dceeff" opacity="0.85"/>
+    <rect x="494" y="67" width="96" height="162" rx="24" fill="#0d2e52" stroke="#7fa9d3" stroke-width="5"/>
+    <path d="M115 76h350v149H115z" fill="#173a62"/>
+    <path d="M130 91h92v119h-92zM239 91h92v119h-92zM348 91h92v119h-92z" fill="#214e7e"/>
+    <path d="M515 367h77l18 48h-112z" fill="#1b426d"/>
+    <circle cx="145" cy="433" r="48" fill="#20364f"/>
+    <circle cx="145" cy="433" r="24" fill="#b8cde2"/>
+    <circle cx="540" cy="433" r="48" fill="#20364f"/>
+    <circle cx="540" cy="433" r="24" fill="#b8cde2"/>
+    <path d="M73 367h91l15 49H55z" fill="#fff" stroke="#8cb4da" stroke-width="5"/>
+    <path d="M576 369h62l-7 38h-75z" fill="#fff" stroke="#8cb4da" stroke-width="5"/>
+    <path d="M70 338h82" stroke="#1684f7" stroke-width="12" stroke-linecap="round"/>
+    <path d="M566 338h69" stroke="#1684f7" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(130 890)" filter="url(#shadow)">
+    <text x="470" y="0" text-anchor="middle" dominant-baseline="hanging" direction="rtl" unicode-bidi="bidi-override" font-family="Tahoma, Arial, sans-serif" font-size="190" font-weight="900" fill="url(#blue)" stroke="#fff" stroke-width="7" paint-order="stroke">سفرتك</text>
+    <path d="M310 183h320" stroke="#7caee1" stroke-width="5" stroke-linecap="round"/>
+    <text x="470" y="218" text-anchor="middle" direction="rtl" font-family="Tahoma, Arial, sans-serif" font-size="55" font-weight="700" fill="#265f9d">سفر مريح .. تجربة لا تُنسى</text>
+    <g transform="translate(430 270)" stroke="#1684f7" stroke-width="7" fill="none">
+      <circle cx="40" cy="40" r="31"/>
+      <path d="M9 40h62M40 9c13 13 19 31 19 31s-6 18-19 31M40 9C27 22 21 40 21 40s6 18 19 31"/>
+      <path d="M-65 29h63M82 29h63M-47 49h45M82 49h45" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
