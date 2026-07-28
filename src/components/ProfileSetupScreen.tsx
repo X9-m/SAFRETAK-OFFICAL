@@ -35,12 +35,11 @@ export function ProfileSetupScreen({ profile, onComplete, onLogout }: ProfileSet
 
   return (
     <main className="auth-page" dir="rtl">
-      <div className="lattice" aria-hidden="true" />
       <section className="auth-card screen-enter profile-setup-card">
         <header className="brand">
-          <div className="logo-circle"><img src="/safretak-logo.jpeg" alt="شعار سفرتك" className="app-logo" /></div>
+          <div className="logo-circle"><img src="/safretak-logo.svg" alt="شعار سفرتك" className="app-logo" /></div>
           <h1>سفرتك</h1>
-          <p>منصة السفر والسياحة الأردنية</p>
+          <p>سفر مريح، تجربة لا تُنسى</p>
         </header>
 
         <div className="login-heading">
@@ -88,7 +87,7 @@ export function ProfileSetupScreen({ profile, onComplete, onLogout }: ProfileSet
         <button type="button" className="setup-logout" onClick={() => void onLogout()} disabled={busy}>
           <LogOut size={15} />استخدام رقم آخر
         </button>
-        <footer className="secure-note"><ShieldCheck size={15} /><span>رقم هاتفك هو وسيلة الدخول إلى حسابك.</span></footer>
+        <footer className="secure-note"><ShieldCheck size={15} /><span>رقم هاتفك هو وسيلة الدخول الآمنة إلى حسابك.</span></footer>
       </section>
     </main>
   );
