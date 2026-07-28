@@ -5,6 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="منصة سفرتك للحجوزات والخدمات السياحية في الأردن" />
     <meta name="theme-color" content="#0B6EE8" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" type="image/svg+xml" href="/safretak-logo.svg" />
+    <link rel="preload" as="image" type="image/svg+xml" href="/safretak-logo.svg" />
+    <style>
+      html,
+      body,
+      #root {
+        min-height: 100%;
+        margin: 0;
+        background: #eef4fb !important;
+      }
+
+      .loading-screen {
+        position: fixed !important;
+        inset: 0 !important;
+        display: grid !important;
+        min-height: 100dvh !important;
+        place-items: center !important;
+        overflow: hidden !important;
+        padding: 24px !important;
+        background:
+          radial-gradient(circle at 18% 14%, rgba(141, 197, 255, 0.34), transparent 28rem),
+          radial-gradient(circle at 86% 86%, rgba(198, 221, 255, 0.42), transparent 30rem),
+          linear-gradient(180deg, #f8fbff, #eaf3ff) !important;
+        color: #17233b !important;
+        text-align: center !important;
+      }
+
+      .loading-logo {
+        display: flex !important;
+        width: min(100%, 360px) !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 16px !important;
+      }
+
+      .loading-logo::before {
+        width: clamp(150px, 38vw, 210px) !important;
+        aspect-ratio: 1 !important;
+        content: "" !important;
+        border: 1px solid rgba(135, 169, 210, 0.26) !important;
+        border-radius: 28px !important;
+        background: #fff url('/safretak-logo.svg') center / contain no-repeat !important;
+        box-shadow: 0 28px 82px rgba(38, 72, 115, 0.22) !important;
+      }
+
+      .loading-logo svg,
+      .loading-name {
+        color: #0b6ee8 !important;
+      }
+    </style>
     <title>سفرتك | SAFRETAK</title>
   </head>
   <body>
