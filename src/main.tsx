@@ -4,6 +4,7 @@ import './index.css';
 import './role-portal.css';
 import './smart-features.css';
 import './business-portals.css';
+import './traveler-redesign.css';
 
 const App = lazy(() => import('./App.tsx'));
 const RoleEntry = lazy(() => import('./RoleEntry.tsx').then((module) => ({ default: module.RoleEntry })));
