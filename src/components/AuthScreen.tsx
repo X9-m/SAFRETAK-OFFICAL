@@ -41,6 +41,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
   const validPhone = isValidJordanPhone(phone);
   const validSignup = intent === 'login' || (isValidFullName(cleanName) && acceptedTerms);
   const expired = step === 'otp' && secondsLeft <= 0;
+  const otpDigits = useMemo(() => Array.from({ length: 6 }, (_, index) => otpCode[index] || ''), [otpCode]);
 
   useEffect(() => {
     if (step !== 'otp' || !challenge) return undefined;
@@ -143,12 +144,11 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
 
   return (
     <main className="auth-page" dir="rtl">
-      <div className="lattice" aria-hidden="true" />
       <section className="auth-card screen-enter auth-choice-card" key={`${intent}-${step}`}>
         <header className="brand">
-          <div className="logo-circle"><img src="/safretak-logo.jpeg" alt="شعار سفرتك" className="app-logo" /></div>
+          <div className="logo-circle"><img src="/safretak-logo.svg" alt="شعار سفرتك" className="app-logo" /></div>
           <h1>سفرتك</h1>
-          <p>اكتشف العالم معنا</p>
+          <p>سفر مريح، تجربة لا تُنسى</p>
         </header>
 
         <div className="auth-switch" role="tablist" aria-label="اختيار نوع الدخول">
@@ -160,18 +160,16 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
           </button>
         </div>
 
-        {intent === 'signup' ? (
-          <div className="auth-stepper" aria-label="خطوات إنشاء الحساب">
-            <span className={`auth-step ${step === 'details' ? 'active' : 'complete'}`}><i>{step === 'otp' ? '✓' : '1'}</i>بيانات الحساب</span>
-            <span className={`auth-step ${step === 'otp' ? 'active' : ''}`}><i>2</i>رمز التحقق</span>
-          </div>
-        ) : null}
+        <div className="auth-stepper" aria-label="خطوات المصادقة">
+          <span className={`auth-step ${step === 'details' ? 'active' : 'complete'}`}><i>1</i><b>{intent === 'signup' ? 'بيانات الحساب' : 'بيانات الدخول'}</b></span>
+          <span className={`auth-step ${step === 'otp' ? 'active' : ''}`}><i>2</i><b>رمز التحقق</b></span>
+        </div>
 
         <div className="login-heading">
           {step === 'otp' ? <MessageSquareText size={22} /> : intent === 'signup' ? <UserPlus size={22} /> : <ShieldCheck size={22} />}
           <div>
-            <h2>{step === 'otp' ? 'رمز التحقق' : intent === 'signup' ? 'إنشاء حساب' : 'تسجيل الدخول'}</h2>
-            <p>{step === 'otp' ? `أدخل الرمز المرسل إلى ${maskPhone(challenge?.phone || normalizedPhone)}.` : intent === 'signup' ? 'أدخل بياناتك الأساسية لبدء رحلتك مع سفرتك.' : 'أدخل رقم هاتف حسابك وسنرسل لك رمز دخول آمنًا.'}</p>
+            <h2>{step === 'otp' ? (intent === 'signup' ? 'تأكيد إنشاء الحساب' : 'تأكيد تسجيل الدخول') : intent === 'signup' ? 'إنشاء حساب مسافر' : 'أهلًا بعودتك'}</h2>
+            <p>{step === 'otp' ? 'أدخل رمز التحقق المرسل إلى رقمك.' : intent === 'signup' ? 'أدخل اسمك ورقم هاتفك لإنشاء حساب جديد.' : 'أدخل رقم هاتف حسابك للمتابعة.'}</p>
           </div>
         </div>
 
@@ -208,7 +206,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
             {error ? <div className="login-alert" role="alert">{error}</div> : null}
             <button type="submit" className="gold-button" disabled={busy || !validPhone || !validSignup}>
               {busy ? <Loader2 className="spin" size={17} /> : intent === 'signup' ? <UserPlus size={17} /> : <LogIn size={17} />}
-              {intent === 'signup' ? 'التالي' : 'إرسال رمز الدخول'}
+              {intent === 'signup' ? 'إرسال رمز إنشاء الحساب' : 'إرسال رمز الدخول'}
             </button>
           </form>
         ) : (
@@ -217,10 +215,8 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
             <label className="field-group">
               <span>رمز التحقق</span>
               <div className="otp-code-field">
-                <div className="otp-digit-grid" aria-hidden="true">
-                  {Array.from({ length: 6 }, (_, index) => <span key={index} className={otpCode[index] ? 'filled' : ''}>{otpCode[index] || ''}</span>)}
-                </div>
-                <input type="text" inputMode="numeric" autoComplete="one-time-code" name="otp" value={otpCode} onChange={(event) => setOtpCode(event.target.value.normalize('NFKC').replace(/\D/g, '').slice(0, 6))} disabled={busy || expired} dir="ltr" maxLength={6} autoFocus aria-label="رمز التحقق المكون من ستة أرقام" aria-invalid={Boolean(error)} />
+                <input type="text" inputMode="numeric" autoComplete="one-time-code" name="otp" value={otpCode} onChange={(event) => setOtpCode(event.target.value.normalize('NFKC').replace(/\D/g, '').slice(0, 6))} disabled={busy || expired} dir="ltr" maxLength={6} autoFocus aria-label="رمز التحقق المكوّن من ستة أرقام" aria-invalid={Boolean(error)} />
+                <div className="otp-digit-grid" dir="ltr" aria-hidden="true">{otpDigits.map((digit, index) => <span key={index} className={digit ? 'filled' : ''}>{digit || '—'}</span>)}</div>
               </div>
             </label>
             <div className={`mode-note ${expired ? 'expired' : ''}`} aria-live="polite">
@@ -230,10 +226,10 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
             {error ? <div className="login-alert" role="alert">{error}</div> : null}
             <button type="submit" className="gold-button" disabled={busy || expired || otpCode.length !== 6}>
               {busy ? <Loader2 className="spin" size={17} /> : <CheckCircle2 size={17} />}
-              {intent === 'signup' ? 'إنشاء الحساب والدخول' : 'تحقق ودخول'}
+              {intent === 'signup' ? 'إنشاء الحساب والدخول' : 'تأكيد الدخول'}
             </button>
             <div className="otp-actions">
-              <button type="button" onClick={() => requestOtp(undefined, true)} disabled={busy || resendLeft > 0}><RotateCcw size={14} />{resendLeft > 0 ? `إعادة الإرسال (${resendLeft})` : 'إعادة إرسال الرمز'}</button>
+              <button type="button" onClick={() => requestOtp(undefined, true)} disabled={busy || resendLeft > 0}><RotateCcw size={14} />{resendLeft > 0 ? `إعادة الإرسال (${resendLeft})` : 'إعادة طلب الرمز'}</button>
               <button type="button" onClick={() => resetFlow(intent)} disabled={busy}><ArrowRight size={14} />تعديل البيانات</button>
             </div>
             {error.includes('غير مسجل') ? <button type="button" className="inline-auth-link" onClick={() => changeIntent('signup')}>إنشاء حساب جديد بهذا الرقم</button> : null}
@@ -241,7 +237,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
           </form>
         )}
 
-        <footer className="secure-note"><ShieldCheck size={15} /><span>دخول محمي برمز تحقق مرتبط برقم هاتفك.</span></footer>
+        <footer className="secure-note"><ShieldCheck size={15} /><span>الدخول وإنشاء الحساب يتمان برمز تحقق آمن إلى رقم الهاتف.</span></footer>
       </section>
     </main>
   );
