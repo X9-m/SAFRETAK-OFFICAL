@@ -2,64 +2,115 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="منصة سفرتك للحجوزات والخدمات السياحية في الأردن" />
     <meta name="theme-color" content="#0B6EE8" />
     <meta name="color-scheme" content="light" />
     <link rel="icon" type="image/svg+xml" href="/safretak-logo.svg" />
     <link rel="preload" as="image" type="image/svg+xml" href="/safretak-logo.svg" />
     <style>
+      * { box-sizing: border-box; }
+
       html,
       body,
       #root {
+        min-width: 320px;
         min-height: 100%;
         margin: 0;
-        background: #eef4fb !important;
+        background: #f5f8fd;
+      }
+
+      body {
+        font-family: Tahoma, "Segoe UI", Arial, system-ui, sans-serif;
       }
 
       .loading-screen {
-        position: fixed !important;
-        inset: 0 !important;
-        display: grid !important;
-        min-height: 100dvh !important;
-        place-items: center !important;
-        overflow: hidden !important;
-        padding: 24px !important;
+        position: fixed;
+        inset: 0;
+        display: grid;
+        min-height: 100dvh;
+        place-items: center;
+        overflow: hidden;
+        padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
         background:
-          radial-gradient(circle at 18% 14%, rgba(141, 197, 255, 0.34), transparent 28rem),
-          radial-gradient(circle at 86% 86%, rgba(198, 221, 255, 0.42), transparent 30rem),
-          linear-gradient(180deg, #f8fbff, #eaf3ff) !important;
-        color: #17233b !important;
-        text-align: center !important;
+          radial-gradient(circle at 12% 10%, rgba(123, 185, 255, 0.30), transparent 26rem),
+          radial-gradient(circle at 90% 90%, rgba(205, 226, 255, 0.48), transparent 30rem),
+          linear-gradient(180deg, #fbfdff 0%, #eaf3ff 100%);
+        color: #102044;
+        text-align: center;
       }
 
-      .loading-logo {
-        display: flex !important;
-        width: min(100%, 360px) !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 16px !important;
+      .loading-card {
+        display: flex;
+        width: min(100%, 360px);
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 22px;
+        border: 1px solid rgba(145, 174, 210, 0.28);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 30px 82px rgba(38, 72, 115, 0.20);
       }
 
-      .loading-logo::before {
-        width: clamp(150px, 38vw, 210px) !important;
-        aspect-ratio: 1 !important;
-        content: "" !important;
-        border: 1px solid rgba(135, 169, 210, 0.26) !important;
-        border-radius: 28px !important;
-        background: #fff url('/safretak-logo.svg') center / contain no-repeat !important;
-        box-shadow: 0 28px 82px rgba(38, 72, 115, 0.22) !important;
+      .loading-brand-image {
+        width: min(230px, 64vw);
+        aspect-ratio: 1;
+        border-radius: 22px;
+        object-fit: contain;
+        background: #fff;
       }
 
-      .loading-logo svg,
-      .loading-name {
-        color: #0b6ee8 !important;
+      .loading-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .loading-copy strong {
+        color: #102044;
+        font-size: 1.22rem;
+      }
+
+      .loading-copy span {
+        color: #71809a;
+        font-size: 0.82rem;
+      }
+
+      .loading-progress {
+        width: min(250px, 76vw);
+        height: 7px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #dce9f8;
+      }
+
+      .loading-progress span {
+        display: block;
+        width: 42%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #72b2ff, #0b6ee8);
+        animation: initial-progress 1.25s ease-in-out infinite alternate;
+      }
+
+      @keyframes initial-progress {
+        from { transform: translateX(75%); }
+        to { transform: translateX(-75%); }
       }
     </style>
     <title>سفرتك | SAFRETAK</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main class="loading-screen" dir="rtl" aria-live="polite" aria-busy="true">
+        <div class="loading-card">
+          <img class="loading-brand-image" src="/safretak-logo.svg" alt="شعار سفرتك" />
+          <div class="loading-copy"><strong>سفرتك</strong><span>جاري تجهيز تجربتك...</span></div>
+          <div class="loading-progress" aria-hidden="true"><span></span></div>
+        </div>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
