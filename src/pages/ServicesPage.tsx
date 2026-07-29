@@ -1,4 +1,4 @@
-import { Filter, Heart, RotateCcw, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { ChevronLeft, Filter, Heart, RotateCcw, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
 import { ServiceCard } from '../components/ServiceCard';
@@ -52,20 +52,31 @@ export function ServicesPage({ services, offices, initialKind, favoritesOnly = f
   const hasFilters = Boolean(query || kind !== (initialKind || 'all') || officeId !== 'all' || minimumRating || maximumPrice != null || availableOnly || sort !== 'newest');
 
   return <div className="page-stack page-enter services-catalog-pro">
-    <section className="services-hero-pro">
-      <div><span className="eyebrow"><Sparkles size={14} />{favoritesOnly ? 'اختياراتك المحفوظة' : 'دليل الخدمات السياحية'}</span><h1>{favoritesOnly ? 'الخدمات المفضلة' : 'اكتشف رحلتك القادمة'}</h1><p>{favoritesOnly ? 'كل الخدمات التي حفظتها للرجوع إليها بسرعة.' : 'رحلات وفنادق وطيران ونقل وخدمات سفر من مكاتب سياحة معتمدة.'}</p></div>
-      <div className="services-hero-counter"><SlidersHorizontal size={27} /><strong>{filtered.length}</strong><span>خدمة مطابقة</span></div>
+    <section className="services-page-head">
+      <span className="eyebrow"><Sparkles size={14} />{favoritesOnly ? 'اختياراتك المحفوظة' : 'دليل سفرتك'}</span>
+      <h1>{favoritesOnly ? 'الخدمات المفضلة' : 'الخدمات'}</h1>
+      <p>{favoritesOnly ? 'كل الخدمات التي حفظتها للرجوع إليها بسرعة.' : 'اختر الخدمة التي تناسب رحلتك.'}</p>
     </section>
+
+    <section className="filter-panel services-search-panel">
+      <div className="services-search-row">
+        <label className="search-field"><Search size={19} /><input type="search" value={query} onChange={(event) => setQuery(event.target.value.slice(0, 100))} placeholder="ابحث عن خدمة" maxLength={100} autoComplete="off" /></label>
+        <button type="button" className={`secondary-button filter-open-button ${showAdvanced ? 'active' : ''}`} onClick={() => setShowAdvanced((value) => !value)}><Filter size={16} />الفلاتر</button>
+      </div>
+    </section>
+
+    {!favoritesOnly ? <section className="service-kind-showcase" aria-label="الفئات الرئيسية">
+      <button type="button" className={kind === 'all' ? 'active' : ''} onClick={() => setKind('all')}><span><SlidersHorizontal size={22} /></span><strong>كل الخدمات</strong><small>{services.length} خدمة متاحة</small><ChevronLeft size={20} /></button>
+      {(Object.entries(serviceKinds) as [ServiceKind, (typeof serviceKinds)[ServiceKind]][]).map(([id, meta]) => {
+        const Icon = meta.icon;
+        const count = services.filter((service) => service.type === id).length;
+        return <button key={id} type="button" className={kind === id ? 'active' : ''} onClick={() => setKind(id)}><span><Icon size={23} /></span><strong>{meta.shortLabel}</strong><small>{count} خدمة</small><ChevronLeft size={20} /></button>;
+      })}
+    </section> : null}
 
     {!favoritesOnly ? <SmartTravelSearch services={services} onSelectService={onSelectService} /> : null}
 
-    {!favoritesOnly ? <section className="service-kind-showcase" aria-label="تصنيفات الخدمات">
-      <button type="button" className={kind === 'all' ? 'active' : ''} onClick={() => setKind('all')}><span><SlidersHorizontal size={21} /></span><strong>كل الخدمات</strong><small>{services.length} خدمة</small></button>
-      {(Object.entries(serviceKinds) as [ServiceKind, (typeof serviceKinds)[ServiceKind]][]).map(([id, meta]) => { const Icon = meta.icon; const count = services.filter((service) => service.type === id).length; return <button key={id} type="button" className={kind === id ? 'active' : ''} onClick={() => setKind(id)}><span><Icon size={21} /></span><strong>{meta.shortLabel}</strong><small>{count} خدمة</small></button>; })}
-    </section> : null}
-
     <section className="filter-panel full-filter-panel services-filter-pro">
-      <div className="services-search-row"><label className="search-field"><Search size={18} /><input type="search" value={query} onChange={(event) => setQuery(event.target.value.slice(0, 100))} placeholder="ابحث باسم الخدمة أو المكتب أو المزايا" maxLength={100} autoComplete="off" /></label><button type="button" className={`secondary-button filter-open-button ${showAdvanced ? 'active' : ''}`} onClick={() => setShowAdvanced((value) => !value)}><Filter size={16} />الفلاتر</button></div>
       <div className="filter-toolbar"><label className="inline-select"><span>ترتيب النتائج</span><select value={sort} onChange={(event) => setSort(event.target.value as SortMode)}><option value="newest">الأحدث</option><option value="price_low">السعر: الأقل</option><option value="price_high">السعر: الأعلى</option><option value="rating">الأعلى تقييمًا</option></select></label><label className="availability-inline"><input type="checkbox" checked={availableOnly} onChange={(event) => setAvailableOnly(event.target.checked)} /><span>المتاح للحجز فقط</span></label>{hasFilters ? <button type="button" className="text-button" onClick={resetFilters}><RotateCcw size={15} />مسح الفلاتر</button> : null}<span className="result-count">{filtered.length} نتيجة</span></div>
       {showAdvanced ? <div className="advanced-filter-grid screen-enter"><label><span>مكتب السياحة</span><select value={officeId} onChange={(event) => setOfficeId(event.target.value)}><option value="all">كل المكاتب</option>{offices.map((office) => <option key={office.id} value={office.id}>{office.name}</option>)}</select></label><label><span>أقل تقييم</span><select value={minimumRating} onChange={(event) => setMinimumRating(Number(event.target.value))}><option value={0}>أي تقييم</option><option value={3}>3 نجوم فأعلى</option><option value={4}>4 نجوم فأعلى</option><option value={4.5}>4.5 نجمة فأعلى</option></select></label><label><span>أقصى سعر أساسي</span><div className="range-row"><input type="range" min="0" max={Math.max(1, catalogMaximum)} step="1" value={maximumPrice ?? catalogMaximum} onChange={(event) => setMaximumPrice(Number(event.target.value))} /><strong>{maximumPrice == null || maximumPrice >= catalogMaximum ? 'بدون حد' : `${maximumPrice} د.أ`}</strong></div></label></div> : null}
     </section>
