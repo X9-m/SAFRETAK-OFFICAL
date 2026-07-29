@@ -1,10 +1,7 @@
 import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import './role-portal.css';
-import './smart-features.css';
-import './business-portals.css';
-import './app-theme.css';
+import './layout.css';
+import './design-system.css';
 
 const App = lazy(() => import('./App.tsx'));
 const RoleEntry = lazy(() => import('./RoleEntry.tsx').then((module) => ({ default: module.RoleEntry })));
