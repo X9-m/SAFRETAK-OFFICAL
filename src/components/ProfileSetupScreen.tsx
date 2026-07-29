@@ -78,7 +78,7 @@ export function ProfileSetupScreen({ profile, onComplete, onLogout }: ProfileSet
 
           {error ? <div id="profile-setup-error" className="login-alert" role="alert">{error}</div> : null}
 
-          <button type="submit" className="gold-button" disabled={busy || !validName}>
+          <button type="submit" className="primary-button" disabled={busy || !validName}>
             {busy ? <Loader2 className="spin" size={17} /> : <Save size={17} />}
             إكمال الحساب
           </button>

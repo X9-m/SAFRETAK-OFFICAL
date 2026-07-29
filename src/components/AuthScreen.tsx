@@ -212,7 +212,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
               ) : null}
 
               {error ? <div className="login-alert" role="alert">{error}</div> : null}
-              <button type="submit" className="gold-button" disabled={busy || !validPhone || !validSignup}>
+              <button type="submit" className="primary-button" disabled={busy || !validPhone || !validSignup}>
                 {busy ? <Loader2 className="spin" size={17} /> : intent === 'signup' ? <UserPlus size={17} /> : <LogIn size={17} />}
                 {intent === 'signup' ? 'إرسال رمز إنشاء الحساب' : 'إرسال رمز الدخول'}
               </button>
@@ -271,7 +271,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
               {error.includes('غير مسجل') ? <button type="button" className="inline-auth-link" onClick={() => changeIntent('signup')}>إنشاء حساب جديد بهذا الرقم</button> : null}
               {error.includes('مسجل مسبقًا') ? <button type="button" className="inline-auth-link" onClick={() => changeIntent('login')}>الانتقال إلى تسجيل الدخول</button> : null}
 
-              <button type="submit" className="gold-button" disabled={busy || expired || otpCode.length !== 6}>
+              <button type="submit" className="primary-button" disabled={busy || expired || otpCode.length !== 6}>
                 {busy ? <Loader2 className="spin" size={17} /> : <CheckCircle2 size={17} />}
                 {intent === 'signup' ? 'إنشاء الحساب والدخول' : 'تأكيد الدخول'}
               </button>

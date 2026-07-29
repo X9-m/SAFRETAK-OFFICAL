@@ -116,8 +116,12 @@ export function SmartTravelSearch({ services, onSelectService }: SmartTravelSear
     const response = selected.length
       ? `حللت طلبك على ${services.length} خدمة منشورة. ركزت على ${kindText}${budgetText}، ورتبت النتائج حسب المطابقة والتقييم والتوفر. أول نتيجة هي الأقرب لطلبك.`
       : 'ما لقيت خدمة منشورة تطابق التفاصيل حاليًا. جرّب توسّع الميزانية أو اكتب وجهة أو نوع خدمة مختلف.';
+    const nextMessages: AssistantMessage[] = [
+      { role: 'user', text: raw },
+      { role: 'assistant', text: response, serviceIds: selected.map((item) => item.service.id) },
+    ];
 
-    setMessages((current) => [...current, { role: 'user', text: raw }, { role: 'assistant', text: response, serviceIds: selected.map((item) => item.service.id) }].slice(-12));
+    setMessages((current) => [...current, ...nextMessages].slice(-12));
     setQuery('');
   };
 

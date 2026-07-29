@@ -27,7 +27,7 @@ const profileIsComplete = (profile: AppProfile): boolean => profile.fullName.tri
 const currentRoute = (): PortalRoute => typeof window === 'undefined' ? { page: 'tab', tab: 'home' } : parsePortalHash(window.location.hash);
 
 function PageLoader() { return <div className="page-loader" role="status"><Loader2 className="spin" size={26} /><span>جاري التحميل...</span></div>; }
-function DataUnavailable({ loading, message, onRetry }: { loading: boolean; message: string; onRetry: () => void }) { return <section className="content-card data-unavailable" role="status">{loading ? <Loader2 className="spin" size={30} /> : <WifiOff size={30} />}<h2>{loading ? 'جاري تحميل بيانات حسابك' : 'تعذر تحميل بيانات الحساب'}</h2><p>{loading ? 'يتم التحقق من الحجوزات والإشعارات.' : message}</p>{!loading ? <button type="button" className="gold-button" onClick={onRetry}><RefreshCcw size={16} />إعادة المحاولة</button> : null}</section>; }
+function DataUnavailable({ loading, message, onRetry }: { loading: boolean; message: string; onRetry: () => void }) { return <section className="content-card data-unavailable" role="status">{loading ? <Loader2 className="spin" size={30} /> : <WifiOff size={30} />}<h2>{loading ? 'جاري تحميل بيانات حسابك' : 'تعذر تحميل بيانات الحساب'}</h2><p>{loading ? 'يتم التحقق من الحجوزات والإشعارات.' : message}</p>{!loading ? <button type="button" className="primary-button" onClick={onRetry}><RefreshCcw size={16} />إعادة المحاولة</button> : null}</section>; }
 
 export default function App() {
   const [authLoading, setAuthLoading] = useState(true);
@@ -109,7 +109,7 @@ export default function App() {
   };
 
   if (authLoading) return <main className="loading-screen"><div className="loading-logo"><Loader2 className="spin" size={34} /><span className="loading-name">سفرتك</span></div></main>;
-  if (authError && !profile) return <main className="loading-screen connection-screen" dir="rtl"><WifiOff size={38} /><h1>تعذر الاتصال</h1><p>{authError}</p><button type="button" className="gold-button" onClick={() => void bootstrap()}><RefreshCcw size={17} />إعادة المحاولة</button></main>;
+  if (authError && !profile) return <main className="loading-screen connection-screen" dir="rtl"><WifiOff size={38} /><h1>تعذر الاتصال</h1><p>{authError}</p><button type="button" className="primary-button" onClick={() => void bootstrap()}><RefreshCcw size={17} />إعادة المحاولة</button></main>;
   if (!profile) return <AuthScreen onAuthenticated={authenticated} />;
   if (!profileIsComplete(profile)) return <ProfileSetupScreen profile={profile} onComplete={completeProfile} onLogout={logout} />;
 

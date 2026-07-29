@@ -1,3 +1,4 @@
+/* SAFRETAK unified blue-and-white design system. */
 /*
  * SAFRETAK unified application theme.
  * Visual reference: clean white surfaces, pale blue atmosphere,
@@ -31,14 +32,6 @@
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 26px;
-
-  /* Compatibility aliases for structural styles. */
-  --bg: var(--surface-soft);
-  --panel: var(--surface);
-  --panel-2: var(--brand-pale);
-  --gold: var(--brand);
-  --gold-soft: var(--brand-dark);
-  --text: var(--ink);
 }
 
 *,
@@ -116,7 +109,6 @@ textarea:disabled {
   opacity: .58;
 }
 
-.gold-button,
 .primary-button,
 .role-primary-button,
 .booking-primary-button {
@@ -128,7 +120,6 @@ textarea:disabled {
   box-shadow: 0 12px 26px rgba(11, 110, 232, .25) !important;
 }
 
-.gold-button:hover:not(:disabled),
 .primary-button:hover:not(:disabled),
 .role-primary-button:hover:not(:disabled),
 .booking-primary-button:hover:not(:disabled) {

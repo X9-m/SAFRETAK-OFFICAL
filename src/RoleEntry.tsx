@@ -71,7 +71,7 @@ function PasswordLogin({ expectedRole, onAuthenticated, onUseOtp }: { expectedRo
         <label className="field-group"><span>رقم الهاتف</span><div className="input-box"><input type="tel" dir="ltr" value={phone} onChange={(event) => setPhone(event.target.value.replace(/[^+\d\s()-]/g, '').slice(0, 18))} placeholder="07XXXXXXXX" autoComplete="username" disabled={busy} autoFocus /><LogIn size={17} /></div></label>
         <label className="field-group"><span>كلمة المرور</span><div className="input-box"><input type="password" dir="ltr" value={password} onChange={(event) => setPassword(event.target.value.slice(0, 128))} minLength={10} maxLength={128} autoComplete="current-password" disabled={busy} /><KeyRound size={17} /></div></label>
         {error ? <div className="login-alert" role="alert">{error}</div> : null}
-        <button className="gold-button" type="submit" disabled={busy || phone.length < 9 || password.length < 10}>{busy ? <Loader2 className="spin" size={17} /> : <LogIn size={17} />}تسجيل الدخول</button>
+        <button className="primary-button" type="submit" disabled={busy || phone.length < 9 || password.length < 10}>{busy ? <Loader2 className="spin" size={17} /> : <LogIn size={17} />}تسجيل الدخول</button>
         <button className="plain-button" type="button" onClick={onUseOtp} disabled={busy}><MessageSquareText size={17} />الدخول برمز الهاتف بدلًا من ذلك</button>
       </form>
       <footer className="secure-note"><ShieldCheck size={15} /><span>كلمة المرور مشفّرة داخل قاعدة البيانات، والجلسة منفصلة حسب نوع الحساب.</span></footer>
