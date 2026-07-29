@@ -32,14 +32,6 @@
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 26px;
-
-  /* Compatibility aliases for structural styles. */
-
-
-
-
-
-
 }
 
 *,
@@ -128,7 +120,6 @@ textarea:disabled {
   box-shadow: 0 12px 26px rgba(11, 110, 232, .25) !important;
 }
 
-.primary-button:hover:not(:disabled),
 .primary-button:hover:not(:disabled),
 .role-primary-button:hover:not(:disabled),
 .booking-primary-button:hover:not(:disabled) {
