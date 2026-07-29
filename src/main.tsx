@@ -1,11 +1,10 @@
 import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Loader2 } from 'lucide-react';
 import './index.css';
 import './role-portal.css';
 import './smart-features.css';
 import './business-portals.css';
-import './system-theme.css';
+import './app-theme.css';
 
 const App = lazy(() => import('./App.tsx'));
 const RoleEntry = lazy(() => import('./RoleEntry.tsx').then((module) => ({ default: module.RoleEntry })));
@@ -24,10 +23,11 @@ const application = path === '/office/customers'
           : <App />;
 
 const fallback = (
-  <main className="loading-screen" dir="rtl" aria-live="polite">
-    <div className="loading-logo">
-      <Loader2 className="spin" size={30} />
-      <span className="loading-name">جاري تحميل سفرتك...</span>
+  <main className="loading-screen" dir="rtl" aria-live="polite" aria-busy="true">
+    <div className="loading-card">
+      <img className="loading-brand-image" src="/safretak-logo.svg" alt="شعار سفرتك" />
+      <div className="loading-copy"><strong>سفرتك</strong><span>جاري تجهيز تجربتك...</span></div>
+      <div className="loading-progress" aria-hidden="true"><span /></div>
     </div>
   </main>
 );
