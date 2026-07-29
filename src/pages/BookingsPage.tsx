@@ -1,4 +1,4 @@
-import { CalendarCheck2, CheckCircle2, ChevronLeft, Clock3, CreditCard, MessageCircle, Search, ShieldCheck, TicketCheck, WalletCards, XCircle } from 'lucide-react';
+import { CalendarCheck2, CheckCircle2, ChevronLeft, Clock3, CreditCard, MessageCircle, PieChart, Plane, Search, ShieldCheck, TicketCheck, XCircle } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
 import { formatDate, formatMoney, serviceKinds } from '../domain';
@@ -29,7 +29,6 @@ export function BookingsPage({ bookings, onOpenBooking, onBrowseServices }: Book
     past: bookings.filter((item) => item.status === 'Completed').length,
     cancelled: bookings.filter((item) => item.status === 'Cancelled').length,
   }), [bookings]);
-  const totalPaid = useMemo(() => bookings.filter((item) => item.paymentStatus === 'paid' && item.status !== 'Cancelled').reduce((sum, item) => sum + item.totalPrice, 0), [bookings]);
   const visible = useMemo(() => {
     const term = query.trim().toLocaleLowerCase('ar');
     return bookings.filter((booking) => {
@@ -42,19 +41,19 @@ export function BookingsPage({ bookings, onOpenBooking, onBrowseServices }: Book
   return (
     <div className="page-stack page-enter bookings-dashboard">
       <section className="bookings-hero">
-        <div className="bookings-hero-copy"><span>رحلاتك في مكان واحد</span><h1>حجوزاتي</h1><p>تابع حالة الطلب والدفع، افتح التذكرة الرقمية، تواصل مع المكتب وارفع المستندات المرتبطة بالحجز.</p></div>
-        <div className="bookings-hero-mark"><TicketCheck size={34} /><strong>{counts.active}</strong><span>حجز نشط</span></div>
+        <div className="bookings-hero-copy"><span>كل رحلاتك في مكان واحد</span><h1>حجوزاتي</h1><p>تابع حالة طلبك واطلع على تفاصيل حجوزاتك بكل سهولة.</p></div>
+        <div className="bookings-hero-art" aria-hidden="true"><Plane size={64} strokeWidth={1.5} /></div>
       </section>
 
       <section className="booking-overview-grid" aria-label="ملخص الحجوزات">
-        <article><CalendarCheck2 size={20} /><div><span>إجمالي الحجوزات</span><strong>{counts.all}</strong></div></article>
-        <article><Clock3 size={20} /><div><span>قيد المتابعة</span><strong>{counts.active}</strong></div></article>
-        <article><CheckCircle2 size={20} /><div><span>رحلات مكتملة</span><strong>{counts.past}</strong></div></article>
-        <article><WalletCards size={20} /><div><span>إجمالي المدفوع</span><strong>{formatMoney(totalPaid)}</strong></div></article>
+        <article><CalendarCheck2 size={25} /><div><span>الحالية</span><strong>{counts.active}</strong></div></article>
+        <article><Clock3 size={25} /><div><span>السابقة</span><strong>{counts.past}</strong></div></article>
+        <article><XCircle size={25} /><div><span>الملغاة</span><strong>{counts.cancelled}</strong></div></article>
+        <article><PieChart size={25} /><div><span>الإجمالي</span><strong>{counts.all}</strong></div></article>
       </section>
 
       <section className="bookings-toolbar">
-        <div className="bookings-search"><Search size={18} /><input value={query} onChange={(event) => setQuery(event.target.value.slice(0, 80))} placeholder="ابحث برقم الحجز أو اسم الخدمة أو المكتب" aria-label="البحث في الحجوزات" /></div>
+        <div className="bookings-search"><Search size={19} /><input value={query} onChange={(event) => setQuery(event.target.value.slice(0, 80))} placeholder="ابحث برقم الحجز أو اسم الخدمة أو المكتب" aria-label="البحث في الحجوزات" /></div>
         <div className="booking-filter-tabs" role="tablist" aria-label="تصفية الحجوزات">
           {([
             ['all', 'الكل', counts.all], ['active', 'الحالية', counts.active], ['past', 'السابقة', counts.past], ['cancelled', 'الملغاة', counts.cancelled],
@@ -75,7 +74,7 @@ export function BookingsPage({ bookings, onOpenBooking, onBrowseServices }: Book
             </div>
           </button>
         </article>;
-      })}</div> : <EmptyState icon={filter === 'cancelled' ? XCircle : filter === 'past' ? CheckCircle2 : CalendarCheck2} title={query ? 'لا توجد نتائج مطابقة' : 'لا توجد حجوزات في هذا القسم'} description={query ? 'جرّب البحث برقم الحجز أو اسم الخدمة.' : filter === 'active' || filter === 'all' ? 'ابدأ باستعراض الخدمات وأرسل أول طلب حجز.' : 'ستظهر الحجوزات هنا حسب حالتها.'} actionLabel="استعراض الخدمات" onAction={onBrowseServices} />}
+      })}</div> : <EmptyState icon={filter === 'cancelled' ? XCircle : filter === 'past' ? CheckCircle2 : CalendarCheck2} title={query ? 'لا توجد نتائج مطابقة' : 'لا توجد حجوزات مطابقة'} description={query ? 'جرّب البحث برقم الحجز أو اسم الخدمة.' : filter === 'active' || filter === 'all' ? 'ابدأ البحث أو عدّل الفلاتر لعرض حجوزاتك.' : 'ستظهر الحجوزات هنا حسب حالتها.'} actionLabel="استعراض الخدمات" onAction={onBrowseServices} />}
     </div>
   );
 }
