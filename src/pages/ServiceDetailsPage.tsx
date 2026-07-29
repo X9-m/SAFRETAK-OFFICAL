@@ -46,7 +46,6 @@ export function ServiceDetailsPage({ service, favorite, canReview, onBack, onBoo
   const [submittingReview, setSubmittingReview] = useState(false);
   const [reviewNotice, setReviewNotice] = useState('');
   const meta = serviceKinds[service.type];
-  const Icon = meta.icon;
   const bookableDates = getBookableDates(service.availableDates, getJordanTodayIso());
   const unavailable = service.seatsRemaining === 0 || (service.availableDates.length > 0 && bookableDates.length === 0);
   const gallery = useMemo(() => [...new Set([service.imageUrl, ...service.images].filter((item): item is string => Boolean(item)))], [service.imageUrl, service.images]);
@@ -92,7 +91,7 @@ export function ServiceDetailsPage({ service, favorite, canReview, onBack, onBoo
           {gallery.length > 1 ? <><button type="button" className="gallery-arrow right" onClick={() => setImageIndex((value) => (value - 1 + gallery.length) % gallery.length)} aria-label="الصورة السابقة"><ChevronRight size={19} /></button><button type="button" className="gallery-arrow left" onClick={() => setImageIndex((value) => (value + 1) % gallery.length)} aria-label="الصورة التالية"><ChevronLeft size={19} /></button><span className="gallery-counter">{imageIndex + 1}/{gallery.length}</span></> : null}
         </div>
         <div className="details-copy">
-          <div className="details-title-actions"><span className="eyebrow">{meta.label}</span><button type="button" className="service-favorite-button" style={{ display: 'inline-flex', width: 40, height: 40, alignItems: 'center', justifyContent: 'center', padding: 0, border: `1px solid ${favorite ? '#d5ad24' : 'rgba(213, 173, 36, 0.48)'}`, borderRadius: '50%', background: favorite ? '#d5ad24' : 'rgba(10, 33, 26, 0.9)', color: favorite ? '#0a211a' : '#e7c13d', boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)', cursor: 'pointer' }} onClick={() => onFavorite(service, !favorite)} aria-label={favorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}><Heart size={18} fill={favorite ? 'currentColor' : 'none'} /></button></div>
+          <div className="details-title-actions"><span className="eyebrow">{meta.label}</span><button type="button" className="service-favorite-button" aria-pressed={favorite} onClick={() => onFavorite(service, !favorite)} aria-label={favorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}><Heart size={18} fill={favorite ? 'currentColor' : 'none'} /></button></div>
           <h1>{service.title}</h1><p>{service.description || 'سيضيف المكتب تفاصيل الخدمة قريبًا.'}</p>
           <div className="details-meta"><span><Star size={15} fill="currentColor" />{service.rating.toFixed(1)}</span><button type="button" onClick={onOffice}><ShieldCheck size={15} />{service.office.name}</button></div>
           {gallery.length > 1 ? <div className="gallery-thumbnails">{gallery.slice(0, 8).map((image, index) => <button key={image} type="button" className={index === imageIndex ? 'active' : ''} onClick={() => setImageIndex(index)}><AppImage src={image} fallbackSrc={serviceImageFallback(service.type)} alt={`${service.title} ${index + 1}`} /></button>)}</div> : null}
