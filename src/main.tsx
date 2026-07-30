@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './layout.css';
 import './design-system.css';
 import './responsive-fixes.css';
+import './traveler-pages.css';
 
 const App = lazy(() => import('./App.tsx'));
 const RoleEntry = lazy(() => import('./RoleEntry.tsx').then((module) => ({ default: module.RoleEntry })));
